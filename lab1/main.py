@@ -5,24 +5,18 @@ import sys
 
 WIDTH = 800
 HEIGHT = 600
-MAX_RADIUS = 500
 
 
 class Canvas(QtWidgets.QLabel):
-    def __init__(self, width, height):
+    def __init__(self, width, height, posLabel, points):
         super().__init__()
         self.setMouseTracking(True)
 
+        self.posLabel = posLabel
+
         self.centerPos = None
-        self.endPos = None
+        self.points = points
 
-        self.adjusting = False
-        self.drawPoint = False
-
-        self.circles = []
-        self.points = []
-
-        self.circlePen = QtGui.QPen(Qt.black, 3)
         self.pointPen = QtGui.QPen(
             Qt.red, 8, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin)
 
@@ -33,94 +27,63 @@ class Canvas(QtWidgets.QLabel):
     def toggleDrawPrimitive(self, value):
         self.drawPoint = value
 
-    def paintCircle(self, center, radius):
-        painter = QtGui.QPainter(self.pixmap())
-        painter.setPen(self.circlePen)
-        rect = QtCore.QRect(center.x() - radius,
-                            center.y() - radius, radius * 2, radius*2)
-        painter.drawEllipse(rect)
-        painter.end()
-        self.circles.append((center, radius))
-        self.update()
-
-    def paintPoint(self, loc):
+    def paintPoint(self, loc, color=QtGui.QColor(255, 0, 0), new=True):
+        if color.getRgb() != self.pointPen.color().getRgb():
+            self.pointPen.setColor(color)
+        self.pointPen.setWidth(8)
         painter = QtGui.QPainter(self.pixmap())
         painter.setPen(self.pointPen)
         painter.drawPoint(loc)
         painter.end()
-        self.points.append(loc)
+
+        if new:
+            self.points.append(loc)
         self.update()
+
+    def paintSegment(self, a, b, color=QtGui.QColor(0, 0, 0)):
+        if color.getRgb() != self.pointPen.color().getRgb():
+            self.pointPen.setColor(color)
+        self.pointPen.setWidth(2)
+
+        painter = QtGui.QPainter(self.pixmap())
+        painter.setPen(self.pointPen)
+        painter.drawLine(a, b)
+        painter.end()
+
+    def paintTriangle(self, a, b, c, color=QtGui.QColor(0, 0, 0)):
+        self.paintSegment(a, b, color)
+        self.paintSegment(a, c, color)
+        self.paintSegment(b, c, color)
 
     def mousePressEvent(self, event):
         if Qt.LeftButton:
-            if self.drawPoint:
-                self.centerPos = event.pos()
-                self.updateImage()
-            else:
-                if not self.adjusting:
-                    self.centerPos = event.pos()
-                    self.adjusting = True
-                else:
-                    self.adjusting = False
-                    self.updateImage()
+            self.centerPos = event.pos()
+            self.updateImage()
 
     def mouseMoveEvent(self, event):
-        if (event.type() == QtCore.QEvent.MouseMove and event.buttons() == Qt.NoButton):
-            if self.adjusting:
-                self.endPos = event.pos()
-                self.update()
-
-    def paintEvent(self, event):
-        painter = QtGui.QPainter(self)
-        dirtyRect = event.rect()
-        painter.drawPixmap(dirtyRect, self.pixmap(), dirtyRect)
-        if self.centerPos and self.endPos:
-            radius = int(((self.centerPos.x() - self.endPos.x()) ** 2 +
-                          (self.centerPos.y() - self.endPos.y()) ** 2) ** .5)
-
-            rect = QtCore.QRect(self.centerPos.x() - radius,
-                                self.centerPos.y() - radius, radius * 2, radius*2)
-            painter.drawEllipse(rect)
+        pos = event.pos()
+        self.posLabel.setText(f"Текущая позиция: ({pos.x()}, {HEIGHT - pos.y()})")
 
     def updateImage(self):
-        if self.drawPoint:
-            self.paintPoint(self.centerPos)
-        else:
-            if self.centerPos and self.endPos:
-                radius = int(((self.centerPos.x() - self.endPos.x()) ** 2 +
-                              (self.centerPos.y() - self.endPos.y()) ** 2) ** .5)
-                self.paintCircle(self.centerPos, radius)
+        self.paintPoint(self.centerPos)
 
-        self.centerPos = self.endPos = None
+    def drawResultingTriangle(self, points):
+        self.paintTriangle(points[4], points[5], points[6])
 
-    def drawResultingLine(self):
-        resultingLine, rc = lu.findMaxIntersecting(
-            self.circles, self.points)
-        if rc == 'Не удалось найти линию, пересекающую хотя бы одну окружность':
-            return rc
+        # биссектрисы
+        self.paintSegment(points[1], points[5])
+        self.paintSegment(points[2], points[6])
+        self.paintSegment(points[3], points[4])
 
-        line = lu.getInfLine(resultingLine)
-        painter = QtGui.QPainter(self.pixmap())
+        for p in points[:4]:
+            self.paintPoint(p, color=QtGui.QColor(0, 255, 0))
 
-        # ---------------- Рисование линии ----------------
-        painter.setPen(QtGui.QPen(Qt.black, 3))
-        painter.drawLine(line[0], line[1])
-
-        # ---------------- Выделение полученных точек ----------------
-        color = QtGui.QColor('#17cf48')
-        painter.setPen(QtGui.QPen(color, 10, Qt.SolidLine,
-                       Qt.RoundCap, Qt.RoundJoin))
-        painter.drawPoint(resultingLine[0])
-        painter.drawPoint(resultingLine[1])
-
-        painter.end()
-        self.update()
-        return rc
-
-    def clearCanvas(self):
+    def clearCanvas(self, clear_points=True):
         self.pixmap().fill(Qt.white)
-        self.circles = []
-        self.points = []
+
+        if clear_points:
+            self.points = []
+
         self.update()
 
 
@@ -137,68 +100,71 @@ class MessageBox(QtWidgets.QMessageBox):
 class UI(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('lab4.ui', self)
+        uic.loadUi('main.ui', self)
 
-        self.canvas = Canvas(WIDTH, HEIGHT)
+        self.posLabel = QtWidgets.QLabel("Текущая позиция: ")
+        self.points = []
 
-        # ---------------- Добавление координат ----------------
-        layout = QtWidgets.QHBoxLayout()
-        layout.addWidget(QtWidgets.QLabel('(0, 600)'))
-        l = QtWidgets.QLabel('(800, 600)')
-        l.setAlignment(Qt.AlignRight)
-        layout.addWidget(l)
+        self.madeSearch = False
 
-        self.gridLayout.addLayout(layout, 4, 0, 1, 1)
+        self.canvas = Canvas(WIDTH, HEIGHT, self.posLabel, self.points)
+
+        self.dialog = MessageBox()
 
         # ---------------- Добавление холста ----------------
         self.gridLayout.addWidget(self.canvas)
-        self.dialog = MessageBox()
+        self.gridLayout.addWidget(self.posLabel, 5, 0, 1, 1)
 
-        # ---------------- Добавление координат ----------------
-        layout = QtWidgets.QHBoxLayout()
-        layout.addWidget(QtWidgets.QLabel('(0, 0)'))
-        l = QtWidgets.QLabel('(800, 0)')
-        l.setAlignment(Qt.AlignRight)
-        layout.addWidget(l)
-
-        self.gridLayout.addLayout(layout, 6, 0, 1, 1)
-
-        # ---------------- Привязка событий к Radio Button ----------------
-        self.circleRB.toggled.connect(
-            lambda x: self.canvas.toggleDrawPrimitive(False))
-        self.pointRB.toggled.connect(
-            lambda x: self.canvas.toggleDrawPrimitive(True))
+        self.drawTriangleButton = QtWidgets.QPushButton("Нарисовать треугольник")
+        self.gridLayout.addWidget(self.drawTriangleButton, 6, 0, 1, 1)
 
         # ---------------- Привязка событий к кнопкам ----------------
-        self.drawLineButton.clicked.connect(self.getResultingLine)
+        self.drawTriangleButton.clicked.connect(self.getResultingTriangle)
         self.drawButton.clicked.connect(self.drawPrimitive)
-        self.clearCanvasAction.triggered.connect(self.clearCanvas)
-        self.clearCirclesAction.triggered.connect(
-            lambda x: self.clearLineEdits(True)
-        )
-        self.clearCirclesAction.setShortcut('Ctrl+E')
+        self.clearCanvasAction.triggered.connect(self.canvas.clearCanvas)
         self.clearPointsAction.triggered.connect(
             lambda x: self.clearLineEdits(False)
         )
+        self.undoAction.triggered.connect(self.undo)
         self.clearPointsAction.setShortcut('Ctrl+P')
+        self.undoAction.setShortcut('Ctrl+Z')
+
         self.show()
 
-    def clearCanvas(self):
-        self.canvas.clearCanvas()
+    def clearLineEdits(self):
+        self.pxLE.setText('')
+        self.pyLE.setText('')
 
-    def clearLineEdits(self, circles):
-        if circles:
-            self.cRadLE.setText('')
-            self.cxLE.setText('')
-            self.cyLE.setText('')
-        else:
-            self.pxLE.setText('')
-            self.pyLE.setText('')
+    def getResultingTriangle(self):
+        self.madeSearch = True
+        min_pts = []
+        min_areas = []
+        min_area_diff = 0
+        for i in range(len(self.points)):
+            for j in range(i + 1, len(self.points)):
+                for k in range(j + 1, len(self.points)):
+                    pts = lu.get_all_points_in_triangle(self.points[i], self.points[j], self.points[k])
+                    areas = lu.calc_areas_and_diff(pts)
 
-    def getResultingLine(self):
-        rc = self.canvas.drawResultingLine()
-        self.dialog.setInfo('Оповещение', rc)
-        self.dialog.show()
+                    if i == 0 and j == i + 1 and k == j + 1:
+                        min_area_diff = areas[-1]
+                        min_pts = pts
+                        min_areas = areas
+
+                    elif min_area_diff > areas[-1]:
+                        min_area_diff = areas[-1]
+                        min_pts = pts
+                        min_areas = areas
+
+        self.canvas.drawResultingTriangle(min_pts)
+
+    def undo(self):
+        self.canvas.clearCanvas(clear_points=False)
+        if len(self.points) > 0 and self.madeSearch:
+            self.points.pop()
+        for p in self.points:
+            self.canvas.paintPoint(p, new=False)      
+        self.madeSearch = False
 
     def toggleLineEditStyle(self, lineEdit, error=True):
         if error:
@@ -232,29 +198,16 @@ class UI(QtWidgets.QMainWindow):
             self.toggleLineEditStyle(lineEdit)
         return v
 
-    def getCircleData(self):
-        r = self.tryGetLineEditData(self.cRadLE, 1, MAX_RADIUS)
-        x = self.tryGetLineEditData(self.cxLE, 0, WIDTH)
-        y = self.tryGetLineEditData(self.cyLE, 0, HEIGHT)
-        return r, x, y
-
     def getPointData(self):
         x = self.tryGetLineEditData(self.pxLE, 0, WIDTH)
         y = self.tryGetLineEditData(self.pyLE, 0, HEIGHT)
         return x, y
 
     def drawPrimitive(self):
-        if self.circleRB.isChecked():
-            r, x, y = self.getCircleData()
-            if None in (r, x, y):
-                return
-            self.canvas.paintCircle(QtCore.QPoint(x, HEIGHT - y), r)
-
-        elif self.pointRB.isChecked():
-            x, y = self.getPointData()
-            if None in (x, y):  
-                return
-            self.canvas.paintPoint(QtCore.QPoint(x, HEIGHT - y))
+        x, y = self.getPointData()
+        if None in (x, y):  
+            return
+        self.canvas.paintPoint(QtCore.QPoint(x, HEIGHT - y))
 
 
 app = QtWidgets.QApplication(sys.argv)

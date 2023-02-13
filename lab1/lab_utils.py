@@ -1,8 +1,52 @@
 from PyQt5 import QtWidgets, QtCore, QtGui, uic
+import math as m
+import itertools as it
 
-def find_points(p1, p2, p3):
-    l1 = abs(p2 - p1)
-    l2 = abs(p3 - p1)
-    l3 = abs(p3 - p2)
+def calculate_vector(a, b) -> list:
+    return QtCore.QPointF(b.x() - a.x(), b.y() - a.y())
 
-    pl12 = p1 + l1 / l2
+def vector_len(a, b):
+    return m.sqrt((b.x() - a.x())**2 + (b.y() - a.y())**2)
+
+def bisec(a, b, c):
+    '''Поиск точки пересечения биссектрисы с прямой a, c'''
+    ab = vector_len(a, b)
+    bc = vector_len(b, c)
+
+    v_ac = calculate_vector(a, c)
+    t = 1 / (1 + bc / ab)
+
+    xpos = a.x() + t * v_ac.x()
+    ypos = a.y() + t * v_ac.y()
+
+    return QtCore.QPointF(xpos, ypos)
+
+def triangle_area(a, b, c) -> float:
+#  1/2 |(x2 – x1)(y3 –y1) – (x3 – x1)(y2 – y1)|
+    return 0.5 * abs((b.x() - a.x()) * (c.y() - a.y()) - (c.x() - a.x()) * (b.y() - a.y()))
+
+def get_all_points_in_triangle(a, b, c) -> QtCore.QPoint:
+    points = [a, b, c]
+    new_points = []
+    for i in range(len(points)):
+        new_points.append(bisec(points[0], points[1], points[2]))
+
+        if i == 0:
+            new_points.insert(0, bisec(new_points[0], points[0], points[1]))
+
+        points.append(points.pop(0))
+    # print(points)
+    return new_points + points
+
+def calc_areas_and_diff(points):
+    areas = [0] * 7
+    areas[0] = triangle_area(points[0], points[4], points[1])
+    areas[1] = triangle_area(points[0], points[4], points[2])
+    areas[2] = triangle_area(points[0], points[5], points[2])
+    areas[3] = triangle_area(points[0], points[5], points[3])
+    areas[4] = triangle_area(points[0], points[6], points[3])
+    areas[5] = triangle_area(points[0], points[6], points[1])
+
+    areas[-1] = max(areas) - min(areas)
+
+    return areas
