@@ -6,49 +6,22 @@ import sys
 WIDTH = 800
 HEIGHT = 600
 
-
-class Canvas(QtWidgets.QLabel):
-    def __init__(self, width, height, posLabel, points):
-        super().__init__()
+class Canvas(QtWidgets.QWidget):
+    def __init__(self, parent, posLabel, points, update_fn):
+        super().__init__(parent)
         self.setMouseTracking(True)
 
+        self.pen = QtGui.QPen(Qt.red, 8, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin)
+        
+        self.painter = QtGui.QPainter()
+
+        self.update_fn = update_fn
         self.posLabel = posLabel
+
+        self.resulting_pts = []
 
         self.centerPos = None
         self.points = points
-
-        self.pointPen = QtGui.QPen(
-            Qt.red, 8, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin)
-
-        canvas = QtGui.QPixmap(width, height)
-        canvas.fill(Qt.white)
-        self.setPixmap(canvas)
-
-    def toggleDrawPrimitive(self, value):
-        self.drawPoint = value
-
-    def paintPoint(self, loc, color=QtGui.QColor(255, 0, 0), new=True):
-        if color.getRgb() != self.pointPen.color().getRgb():
-            self.pointPen.setColor(color)
-        self.pointPen.setWidth(8)
-        painter = QtGui.QPainter(self.pixmap())
-        painter.setPen(self.pointPen)
-        painter.drawPoint(loc)
-        painter.end()
-
-        if new:
-            self.points.append(loc)
-        self.update()
-
-    def paintSegment(self, a, b, color=QtGui.QColor(0, 0, 0)):
-        if color.getRgb() != self.pointPen.color().getRgb():
-            self.pointPen.setColor(color)
-        self.pointPen.setWidth(2)
-
-        painter = QtGui.QPainter(self.pixmap())
-        painter.setPen(self.pointPen)
-        painter.drawLine(a, b)
-        painter.end()
 
     def paintTriangle(self, a, b, c, color=QtGui.QColor(0, 0, 0)):
         self.paintSegment(a, b, color)
@@ -58,26 +31,42 @@ class Canvas(QtWidgets.QLabel):
     def mousePressEvent(self, event):
         if Qt.LeftButton:
             self.centerPos = event.pos()
-            self.updateImage()
+            self.points.append(self.centerPos)
+            self.update_fn(QtCore.QPoint(self.centerPos.x(), self.height() - self.centerPos.y()))
+            self.update()
 
     def mouseMoveEvent(self, event):
         pos = event.pos()
-        self.posLabel.setText(f"Текущая позиция: ({pos.x()}, {HEIGHT - pos.y()})")
+        self.posLabel.setText(f"Текущая позиция: ({pos.x()}, {self.height() - pos.y()})")
 
-    def updateImage(self):
-        self.paintPoint(self.centerPos)
+    def paintEvent(self, event):
+        self.painter.begin(self)
+        self.painter.setPen(self.pen)
 
-    def drawResultingTriangle(self, points):
-        self.paintTriangle(points[4], points[5], points[6])
+        self.painter.fillRect(0, 0, self.width(), self.height(), Qt.white)
+        for p in self.points:
+            self.painter.drawPoint(p)
 
-        # биссектрисы
-        self.paintSegment(points[1], points[5])
-        self.paintSegment(points[2], points[6])
-        self.paintSegment(points[3], points[4])
+        if len(self.resulting_pts) != 0:
+            self.pen.setWidth(2)
+            self.pen.setColor(Qt.black)
+            self.painter.setPen(self.pen)
+            
+            self.painter.drawPolygon(self.resulting_pts[4], self.resulting_pts[5], self.resulting_pts[6])
+            self.painter.drawLine(self.resulting_pts[1], self.resulting_pts[5])
+            self.painter.drawLine(self.resulting_pts[2], self.resulting_pts[6])
+            self.painter.drawLine(self.resulting_pts[3], self.resulting_pts[4])
 
-        for p in points[:4]:
-            self.paintPoint(p, color=QtGui.QColor(0, 255, 0))
+            self.pen.setWidth(8)
+            self.pen.setColor(QtGui.QColor(0, 255, 0))
+            self.painter.setPen(self.pen)
+            for p in self.resulting_pts[:4]:
+                self.painter.drawPoint(p)
 
+        self.pen.setWidth(8)
+        self.pen.setColor(Qt.red)
+        self.painter.end()
+    
     def clearCanvas(self, clear_points=True):
         self.pixmap().fill(Qt.white)
 
@@ -97,37 +86,52 @@ class MessageBox(QtWidgets.QMessageBox):
         self.setText(text)
 
 
+class Table(QtWidgets.QTableWidget):
+    def __init__(self, rows=0, cols=1):
+        super().__init__(rows, cols)
+        self.setMaximumWidth(100)
+    
+    def addEntry(self, data):
+        to_insert = QtWidgets.QTableWidgetItem(f'({data.x()}, {data.y()})')
+        self.insertRow(self.rowCount())
+        self.setItem(self.rowCount() - 1, self.columnCount() - 1, to_insert)
+
+    def removeEntry(self, ind):
+        if ind < 0:
+            ind = self.rowCount() + ind
+        self.removeRow(ind)
+    
+    def cellChanged(self, row: int, column: int) -> None:
+        return self.item(row, column)
+
 class UI(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('main.ui', self)
 
-        self.posLabel = QtWidgets.QLabel("Текущая позиция: ")
         self.points = []
 
-        self.madeSearch = False
+        self.tableWidget = Table()
+        self.gridLayout.addWidget(self.tableWidget, 0, 1, -1, -1)
 
-        self.canvas = Canvas(WIDTH, HEIGHT, self.posLabel, self.points)
+        self.canvas = Canvas(self, self.posLabel, self.points, self.tableWidget.addEntry)
 
         self.dialog = MessageBox()
 
         # ---------------- Добавление холста ----------------
-        self.gridLayout.addWidget(self.canvas)
-        self.gridLayout.addWidget(self.posLabel, 5, 0, 1, 1)
-
-        self.drawTriangleButton = QtWidgets.QPushButton("Нарисовать треугольник")
-        self.gridLayout.addWidget(self.drawTriangleButton, 6, 0, 1, 1)
+        self.verticalLayout.insertWidget(1, self.canvas)
 
         # ---------------- Привязка событий к кнопкам ----------------
-        self.drawTriangleButton.clicked.connect(self.getResultingTriangle)
-        self.drawButton.clicked.connect(self.drawPrimitive)
-        self.clearCanvasAction.triggered.connect(self.canvas.clearCanvas)
-        self.clearPointsAction.triggered.connect(
-            lambda x: self.clearLineEdits(False)
-        )
+        self.findTriangleButton.clicked.connect(self.getResultingTriangle)
+        # self.clearCanvasAction.triggered.connect(self.canvas.clearCanvas)
+        # self.clearPointsAction.triggered.connect(
+        #     lambda x: self.clearLineEdits(False)
+        # )
         self.undoAction.triggered.connect(self.undo)
-        self.clearPointsAction.setShortcut('Ctrl+P')
         self.undoAction.setShortcut('Ctrl+Z')
+        # self.clearPointsAction.setShortcut('Ctrl+P')
+
+        self.tableWidget.itemChanged.connect(self.updateTable)
 
         self.show()
 
@@ -156,15 +160,16 @@ class UI(QtWidgets.QMainWindow):
                         min_pts = pts
                         min_areas = areas
 
-        self.canvas.drawResultingTriangle(min_pts)
+        self.canvas.resulting_pts = min_pts
+        self.canvas.update()
 
     def undo(self):
-        self.canvas.clearCanvas(clear_points=False)
-        if len(self.points) > 0 and self.madeSearch:
+        if len(self.points) > 0:
             self.points.pop()
-        for p in self.points:
-            self.canvas.paintPoint(p, new=False)      
-        self.madeSearch = False
+            self.tableWidget.removeEntry(-1)
+
+        self.canvas.resulting_pts = []
+        self.canvas.update()
 
     def toggleLineEditStyle(self, lineEdit, error=True):
         if error:
@@ -185,6 +190,17 @@ class UI(QtWidgets.QMainWindow):
                 }
                 '''
             )
+    
+    def updateTable(self, data):
+        item = None
+        try:
+            item = list(map(int, data.text().split(' ')))
+        except Exception:
+            return
+        else:
+            item = QtCore.QPoint(item[0], self.canvas.height() - item[1])
+            self.points[data.row()] = item
+            self.canvas.update()
 
     def tryGetLineEditData(self, lineEdit, vmin=None, vmax=None):
         try:
@@ -202,12 +218,6 @@ class UI(QtWidgets.QMainWindow):
         x = self.tryGetLineEditData(self.pxLE, 0, WIDTH)
         y = self.tryGetLineEditData(self.pyLE, 0, HEIGHT)
         return x, y
-
-    def drawPrimitive(self):
-        x, y = self.getPointData()
-        if None in (x, y):  
-            return
-        self.canvas.paintPoint(QtCore.QPoint(x, HEIGHT - y))
 
 
 app = QtWidgets.QApplication(sys.argv)
