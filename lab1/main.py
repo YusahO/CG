@@ -3,16 +3,19 @@ from PyQt5.QtCore import Qt
 import lab_utils as lu
 import sys
 
-WIDTH = 800
-HEIGHT = 600
+
+def remap(v, width, height):
+    return QtCore.QPoint(int(v.x() - width//2), int(height//2 - v.y()))
+
 
 class Canvas(QtWidgets.QWidget):
     def __init__(self, parent, posLabel, points, update_fn):
         super().__init__(parent)
         self.setMouseTracking(True)
 
-        self.pen = QtGui.QPen(Qt.red, 8, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin)
-        
+        self.pen = QtGui.QPen(Qt.red, 8, Qt.SolidLine,
+                              Qt.RoundCap, Qt.RoundJoin)
+
         self.painter = QtGui.QPainter()
 
         self.update_fn = update_fn
@@ -32,18 +35,29 @@ class Canvas(QtWidgets.QWidget):
         if Qt.LeftButton:
             self.centerPos = event.pos()
             self.points.append(self.centerPos)
-            self.update_fn(QtCore.QPoint(self.centerPos.x(), self.height() - self.centerPos.y()))
+            self.update_fn(remap(self.centerPos, self.width(), self.height()))
             self.update()
 
     def mouseMoveEvent(self, event):
-        pos = event.pos()
-        self.posLabel.setText(f"Текущая позиция: ({pos.x()}, {self.height() - pos.y()})")
+        pos = remap(event.pos(), self.width(), self.height())
+        self.posLabel.setText(f"Текущая позиция: ({pos.x()}, {pos.y()})")
 
     def paintEvent(self, event):
         self.painter.begin(self)
         self.painter.setPen(self.pen)
 
         self.painter.fillRect(0, 0, self.width(), self.height(), Qt.white)
+
+        # ------------------ оси -------------------
+        self.pen.setWidth(1)
+        self.pen.setColor(Qt.black)
+        self.painter.setPen(self.pen)
+        self.painter.drawLine(QtCore.QPoint(self.width()//2, 0), QtCore.QPoint(self.width()//2, self.height()))
+        self.painter.drawLine(QtCore.QPoint(0, self.height()//2), QtCore.QPoint(self.width(), self.height()//2))
+
+        self.pen.setWidth(8)
+        self.pen.setColor(Qt.red)
+        self.painter.setPen(self.pen)
         for p in self.points:
             self.painter.drawPoint(p)
 
@@ -214,10 +228,10 @@ class UI(QtWidgets.QMainWindow):
             self.toggleLineEditStyle(lineEdit)
         return v
 
-    def getPointData(self):
-        x = self.tryGetLineEditData(self.pxLE, 0, WIDTH)
-        y = self.tryGetLineEditData(self.pyLE, 0, HEIGHT)
-        return x, y
+    # def getPointData(self):
+    #     x = self.tryGetLineEditData(self.pxLE, 0, WIDTH)
+    #     y = self.tryGetLineEditData(self.pyLE, 0, HEIGHT)
+    #     return x, y
 
 
 app = QtWidgets.QApplication(sys.argv)
