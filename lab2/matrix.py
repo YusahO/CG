@@ -1,7 +1,7 @@
 import math as m
 
 class Mat():
-    def __init__(self, args):
+    def __init__(self, *args):
         if type(args[0]) == int:
             rows, cols = args[0], args[1]
             self.mat = [[0 for _ in range(cols)] for _ in range(rows)]
@@ -15,12 +15,21 @@ class Mat():
         
 
     def __mul__(self, other):
-        res = Mat((len(self.mat), len(other[0])))
+        res = Mat(len(self.mat), len(other[0]))
         for i in range(len(self.mat)):
-            for j in range(len(res[0])):
+            for j in range(len(self.mat[0])):
                 for k in range(len(self.mat[0])):
                     res[i][j] += self.mat[i][k] * other[k][j]
         return res
+    
+    def __imul__(self, other):
+        for i in range(len(self.mat)):
+            for j in range(len(self.mat[0])):
+                prod = 0
+                for k in range(len(self.mat[0])):
+                    prod += self.mat[i][k] * other[k][j]
+                self.mat[i][j] = prod
+        return self
 
     def __add__(self, other):
         res = Mat((len(self.mat), len(self.mat[0])))
@@ -51,28 +60,27 @@ class Mat():
     
 class ScaleMat3(Mat):
     def __init__(self, kx, ky):
-        super().__init__((3, 3))
-        self.mat[0][0] = kx
-        self.mat[1][1] = ky
-        self.mat[2][2] = 1
+        self.mat = [
+            [kx, 0,  0],
+            [0,  ky, 0],
+            [0,  0,  1]
+        ]
+
     
 class TranslationMat3(Mat):
     def __init__(self, dx, dy):
-        super().__init__((3, 3))
-        self.unit()
-        self.mat[-1][0] = dx
-        self.mat[-1][1] = dy
-        # self.mat[0][-1] = dx
-        # self.mat[1][-1] = dy
+        self.mat = [
+            [1,  0,  0],
+            [0,  1,  0],
+            [dx, dy, 1]
+        ]
 
 class RotationMat3(Mat):
     def __init__(self, angle):
-        super().__init__((3, 3))
         cos = m.cos(angle)
         sin = m.sin(angle)
-        self.mat[0][0] = cos
-        self.mat[0][1] = sin
-        self.mat[1][0] = -sin
-        self.mat[1][1] = cos
-        self.mat[-1][-1] = 1
-        # print(self.mat)
+        self.mat = [
+            [cos,   sin,  0],
+            [-sin,  cos,  0],
+            [0,     0,    1]
+        ]

@@ -47,6 +47,6 @@ def calc_areas_and_diff(points):
     areas[4] = triangle_area(points[0], points[6], points[3])
     areas[5] = triangle_area(points[0], points[6], points[1])
 
-    areas[-1] = max(areas) - min(areas)
+    areas[-1] = max(areas[:-1]) - min(areas[:-1])
 
     return areas

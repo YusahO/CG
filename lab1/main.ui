@@ -29,13 +29,6 @@
          <string>Рисовать</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_3">
-         <item row="2" column="0" colspan="5">
-          <widget class="QPushButton" name="drawButton">
-           <property name="text">
-            <string>Нарисовать</string>
-           </property>
-          </widget>
-         </item>
          <item row="1" column="1">
           <widget class="QLabel" name="pointLabel">
            <property name="text">
@@ -43,10 +36,10 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="3">
-          <widget class="QLineEdit" name="pyLE">
-           <property name="placeholderText">
-            <string>y</string>
+         <item row="2" column="0" colspan="5">
+          <widget class="QPushButton" name="drawButton">
+           <property name="text">
+            <string>Нарисовать</string>
            </property>
           </widget>
          </item>
@@ -57,21 +50,83 @@
            </property>
           </widget>
          </item>
+         <item row="1" column="3">
+          <widget class="QLineEdit" name="pyLE">
+           <property name="placeholderText">
+            <string>y</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="posLabel">
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Текущая позиция:</string>
-        </property>
-       </widget>
+       <layout class="QGridLayout" name="statLayout" columnstretch="0,0,0,0,0">
+        <item row="3" column="4" rowspan="3">
+         <widget class="QLabel" name="minDiffLabel">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2" rowspan="3">
+         <widget class="QLabel" name="posLabel">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Текущая позиция:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="3">
+         <widget class="QLabel" name="minAreaLabel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="3">
+         <widget class="QLabel" name="maxAreaLabel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
        <widget class="QPushButton" name="findTriangleButton">
@@ -98,7 +153,6 @@
      <string>Файл</string>
     </property>
     <addaction name="clearCanvasAction"/>
-    <addaction name="clearPointsAction"/>
     <addaction name="separator"/>
     <addaction name="undoAction"/>
    </widget>

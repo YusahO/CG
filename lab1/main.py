@@ -8,13 +8,16 @@ def remap(v, width, height):
     return QtCore.QPoint(int(v.x() - width//2), int(height//2 - v.y()))
 
 
+def remap_back(v, width, height):
+    return QtCore.QPoint(int(v.x() + width//2), int(height//2 - v.y()))
+
+
 class Canvas(QtWidgets.QWidget):
     def __init__(self, parent, posLabel, points, update_fn):
         super().__init__(parent)
         self.setMouseTracking(True)
 
-        self.pen = QtGui.QPen(Qt.red, 8, Qt.SolidLine,
-                              Qt.RoundCap, Qt.RoundJoin)
+        self.pen = QtGui.QPen(Qt.red, 8, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin)
 
         self.painter = QtGui.QPainter()
 
@@ -58,7 +61,8 @@ class Canvas(QtWidgets.QWidget):
         self.pen.setWidth(8)
         self.pen.setColor(Qt.red)
         self.painter.setPen(self.pen)
-        for p in self.points:
+        for n, p in enumerate(self.points, 1):
+            self.painter.drawStaticText(p - QtCore.QPoint(5, 20), QtGui.QStaticText(f'{n}'))
             self.painter.drawPoint(p)
 
         if len(self.resulting_pts) != 0:
@@ -101,14 +105,17 @@ class MessageBox(QtWidgets.QMessageBox):
 
 
 class Table(QtWidgets.QTableWidget):
-    def __init__(self, rows=0, cols=1):
+    def __init__(self, rows=0, cols=2):
         super().__init__(rows, cols)
-        self.setMaximumWidth(100)
+        self.setMaximumWidth(190)
+        self.setColumnWidth(0, 80)
+        self.setColumnWidth(1, 80)
     
     def addEntry(self, data):
-        to_insert = QtWidgets.QTableWidgetItem(f'({data.x()}, {data.y()})')
         self.insertRow(self.rowCount())
-        self.setItem(self.rowCount() - 1, self.columnCount() - 1, to_insert)
+
+        self.setItem(self.rowCount() - 1, 0, QtWidgets.QTableWidgetItem(f'{data.x()}'))
+        self.setItem(self.rowCount() - 1, 1, QtWidgets.QTableWidgetItem(f'{data.y()}'))
 
     def removeEntry(self, ind):
         if ind < 0:
@@ -121,29 +128,27 @@ class Table(QtWidgets.QTableWidget):
 class UI(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('main.ui', self)
+        uic.loadUi('/home/daria/Документы/CG/lab1/main.ui', self)
 
         self.points = []
 
         self.tableWidget = Table()
         self.gridLayout.addWidget(self.tableWidget, 0, 1, -1, -1)
 
-        self.canvas = Canvas(self, self.posLabel, self.points, self.tableWidget.addEntry)
+        self.canvas = Canvas(self, self.statLayout.itemAt(1).widget(), self.points, self.tableWidget.addEntry)
 
         self.dialog = MessageBox()
 
         # ---------------- Добавление холста ----------------
-        self.verticalLayout.insertWidget(1, self.canvas)
+        self.verticalLayout.insertWidget(1, self.canvas, stretch=4)
 
         # ---------------- Привязка событий к кнопкам ----------------
         self.findTriangleButton.clicked.connect(self.getResultingTriangle)
-        # self.clearCanvasAction.triggered.connect(self.canvas.clearCanvas)
-        # self.clearPointsAction.triggered.connect(
-        #     lambda x: self.clearLineEdits(False)
-        # )
+        self.drawButton.clicked.connect(self.putPoint)
+
         self.undoAction.triggered.connect(self.undo)
         self.undoAction.setShortcut('Ctrl+Z')
-        # self.clearPointsAction.setShortcut('Ctrl+P')
+        self.clearCanvasAction.triggered.connect(self.clearAll)
 
         self.tableWidget.itemChanged.connect(self.updateTable)
 
@@ -175,6 +180,9 @@ class UI(QtWidgets.QMainWindow):
                         min_areas = areas
 
         self.canvas.resulting_pts = min_pts
+        self.statLayout.itemAt(0).widget().setText(f"Минимальная разница: {min_area_diff:.3f}")
+        self.statLayout.itemAt(3).widget().setText(f"Наиб. площадь: {max(min_areas[:-1]):.3f}")
+        self.statLayout.itemAt(2).widget().setText(f"Наим. площадь: {min(min_areas[:-1]):.3f}")
         self.canvas.update()
 
     def undo(self):
@@ -206,14 +214,16 @@ class UI(QtWidgets.QMainWindow):
             )
     
     def updateTable(self, data):
-        item = None
-        try:
-            item = list(map(int, data.text().split(' ')))
-        except Exception:
-            return
-        else:
-            item = QtCore.QPoint(item[0], self.canvas.height() - item[1])
-            self.points[data.row()] = item
+        if data.isSelected():
+            w, h = self.canvas.width(), self.canvas.height()
+            item = int(data.text())
+            if data.column() == 0:
+                val = QtCore.QPoint(remap_back(QtCore.QPoint(item, 0), w, h).x(), self.points[data.row()].y())
+            else:
+                val = QtCore.QPoint(self.points[data.row()].x(), remap_back(QtCore.QPoint(0, item), w, h).y())
+            self.points[data.row()] = val
+
+            self.canvas.resulting_pts = []
             self.canvas.update()
 
     def tryGetLineEditData(self, lineEdit, vmin=None, vmax=None):
@@ -228,10 +238,34 @@ class UI(QtWidgets.QMainWindow):
             self.toggleLineEditStyle(lineEdit)
         return v
 
-    # def getPointData(self):
-    #     x = self.tryGetLineEditData(self.pxLE, 0, WIDTH)
-    #     y = self.tryGetLineEditData(self.pyLE, 0, HEIGHT)
-    #     return x, y
+    def putPoint(self):
+        w, h = self.canvas.width(), self.canvas.height()
+        x = self.tryGetLineEditData(self.pxLE, -w // 2, w // 2)
+        y = self.tryGetLineEditData(self.pyLE, -h // 2, h // 2)
+        
+        pt = QtCore.QPoint(
+            x if x is not None else 0,
+            y if y is not None else 0
+        )
+
+        pt = remap_back(pt, w, h)
+
+        if pt not in self.canvas.points:
+            self.canvas.points.append(pt)
+        else:
+            self.toggleLineEditStyle(self.pxLE)
+            self.toggleLineEditStyle(self.pyLE)
+
+        self.tableWidget.addEntry(pt)
+        self.canvas.update()
+    
+    def clearAll(self):
+        for i in range(len(self.points) - 1, -1, -1):
+            self.tableWidget.removeEntry(i)
+        self.points.clear()
+        self.canvas.resulting_pts.clear()
+
+        self.canvas.update()
 
 
 app = QtWidgets.QApplication(sys.argv)
