@@ -1,13 +1,18 @@
 from PyQt5 import QtWidgets, QtCore, QtGui, uic
 from PyQt5.QtCore import Qt
 import sys
+from canvas import Canvas
 import figures as fig
 
 def remap(v, width, height):
-    return QtCore.QPoint(int(v.x() - width//2), int(height//2 - v.y()))
+    vx = v.x()
+    vy = v.y()
+    return QtCore.QPointF(vx - width / 2, height / 2 - vy)
 
 def remap_back(v, width, height):
-    return QtCore.QPoint(int(v.x() + width//2), int(height//2 - v.y()))
+    vx = v.x()
+    vy = v.y()
+    return QtCore.QPointF(vx + width / 2, height / 2 - vy)
 
 def replace_in_list(l, x, y):
     for i in range(len(l)):
@@ -15,86 +20,32 @@ def replace_in_list(l, x, y):
             l[i] = y
     return l
 
-class Canvas(QtWidgets.QWidget):
-    def __init__(self):
-        super().__init__()
-        self.setMouseTracking(True)
-
-        self.objectCenter = QtCore.QPoint(self.width() // 2, self.height() // 2)
-
-        self.pivotFieldEmpty = True
-
-        self.transforms = [[0, 0], 0, [1, 1]]
-        self.pivotPos = self.objectCenter
-
-        self.pen = QtGui.QPen(
-            Qt.red, 2, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin)
-        self.painter = QtGui.QPainter()
-
-        self.obj = fig.BugObject(self.objectCenter, 25)
-
-        self.update()
-
-    def resizeEvent(self, event):
-        self.objectCenter = QtCore.QPoint(self.width()//2, self.height()//2)
-        if self.pivotFieldEmpty:
-            self.pivotPos = self.objectCenter
-
-        self.obj.c = self.objectCenter
-        self.obj.calculatePoints(self.obj.c)
-        self.update()
-
-    def paintEvent(self, event):
-        self.painter.begin(self)
-        self.painter.setPen(self.pen)
-
-        self.painter.fillRect(0, 0, self.width(), self.height(), Qt.white)
-
-        self.pen.setWidth(8)
-        self.pen.setColor(Qt.red)
-        self.painter.setPen(self.pen)
-        self.painter.drawPoint(self.pivotPos)
-
-        self.pen.setWidth(2)
-        self.pen.setColor(Qt.black)
-        self.painter.setPen(self.pen)
-        self.obj.paint(self.painter)
-
-        self.painter.end()
-
-class MessageBox(QtWidgets.QMessageBox):
-    def __init__(self):
-        super().__init__()
-
-    def setInfo(self, title, text, icon=QtWidgets.QMessageBox.Information):
-        self.setWindowTitle(title)
-        self.setIcon(icon)
-        self.setText(text)
-
 class UI(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('/home/daria/Документы/CG/lab2/main.ui', self)
 
-        self.canvas = Canvas()
-
-        self.dialog = MessageBox()
-
-        # ---------------- Добавление холста ----------------
-        self.mainLayout.addWidget(self.canvas)
-
         # ---------------- Привязка событий к кнопкам ----------------
-        self.transformButton.clicked.connect(self.makeTransforms)
-        self.undoAction.triggered.connect(self.undo)
-        self.clearPointsAction.setShortcut('Ctrl+P')
-        self.undoAction.setShortcut('Ctrl+Z')
+        self.translatePB.clicked.connect(self.translateFigure)
+        self.rotatePB.clicked.connect(self.rotateFigure)
+        self.scalePB.clicked.connect(self.scaleFigure)
+
+        self.undoPB.clicked.connect(self.undo)
+        self.resetPB.clicked.connect(self.reset)
+
+        self.scalepxLE.textChanged.connect(lambda text: self.updateLineEdits(self.rotpxLE, text))
+        self.scalepyLE.textChanged.connect(lambda text: self.updateLineEdits(self.rotpyLE, text))
+        self.rotpxLE.textChanged.connect(lambda text: self.updateLineEdits(self.scalepxLE, text))
+        self.rotpyLE.textChanged.connect(lambda text: self.updateLineEdits(self.scalepyLE, text))
 
         self.show()
 
+    def updateLineEdits(self, dstLE, text):
+        if self.centerCB.isChecked():
+            dstLE.setText(text)
+        self.readPivots()
 
-    def undo(self):
-        pass
-
+    
     def toggleLineEditStyle(self, lineEdit, error=True):
         if error:
             lineEdit.setStyleSheet(
@@ -115,10 +66,7 @@ class UI(QtWidgets.QMainWindow):
                 '''
             )
 
-    def updateTable(self):
-        self.tableWidget.addEntry(len(self.points), self.points[-1])
-
-    def tryGetLineEditData(self, lineEdit, vmin=None, vmax=None):
+    def tryGetLineEditData(self, lineEdit, vmin=None, vmax=None, vdefault=0):
         try:
             v = float(lineEdit.text())
             if None not in (vmin, vmax):
@@ -126,31 +74,90 @@ class UI(QtWidgets.QMainWindow):
                     raise Exception
             self.toggleLineEditStyle(lineEdit, error=False)
         except:
-            v = None
+            v = vdefault
         return v
+    
+    def readPivots(self):
+        rpx = self.tryGetLineEditData(self.rotpxLE)
+        rpy = self.tryGetLineEditData(self.rotpyLE)
 
-    def makeTransforms(self):
-        translation = [self.tryGetLineEditData(self.translationXLE), self.tryGetLineEditData(self.translationYLE)]
-        rotation = self.tryGetLineEditData(self.rotationAngleLE)
-        scale = [self.tryGetLineEditData(self.scaleXLE), self.tryGetLineEditData(self.scaleYLE)]
-        pivot = [self.tryGetLineEditData(self.pivotXLE), self.tryGetLineEditData(self.pivotYLE)]
+        spx = self.tryGetLineEditData(self.scalepxLE)
+        spy = self.tryGetLineEditData(self.scalepyLE)
 
-        translation = replace_in_list(translation, None, 0)
-        translation[1] = -translation[1]
-        rotation = 0 if rotation is None else rotation * 3.14 / 180
-        scale = replace_in_list(scale, None, 1)
 
-        self.canvas.pivotPos = QtCore.QPoint(
-            int(pivot[0] + self.canvas.width() // 2) if pivot[0] is not None else self.canvas.pivotPos.x(),
-            int(self.canvas.height() // 2 - pivot[1]) if pivot[1] is not None else self.canvas.pivotPos.y(),
-        )
+        w, h = self.canvas.width(), self.canvas.height()
+        piv = remap_back(QtCore.QPointF(rpx, rpy), w, h)
+        self.canvas.rotPivot = piv
 
-        if not any(pivot):
-            self.canvas.pivotFieldEmpty = False
+        piv = remap_back(QtCore.QPointF(spx, spy), w, h)
+        self.canvas.scalePivot = piv
 
-        self.canvas.transforms = [translation, rotation, scale]
-        # print([translation, rotation, scale])
-        self.canvas.obj.transformObject(self.canvas.pivotPos, self.canvas.transforms)
+        self.canvas.update()
+    
+    def translateFigure(self):
+        dx = self.tryGetLineEditData(self.dxLE, vdefault=None)
+        dy = self.tryGetLineEditData(self.dyLE, vdefault=None)
+
+        if dx is None:
+            self.dxLE.setText('0.0')
+            dx = 0
+        if dy is None:
+            self.dyLE.setText('0.0')
+            dy = 0
+
+        self.canvas.obj.translateObject([dx, -dy])
+        self.canvas.update()
+
+    def rotateFigure(self):
+        px = self.tryGetLineEditData(self.rotpxLE, vdefault=None)
+        py = self.tryGetLineEditData(self.rotpyLE, vdefault=None)
+        angle = self.tryGetLineEditData(self.angleLE, vdefault=None)
+
+        if px is None:
+            self.rotpxLE.setText('0.0')
+            px = 0
+        if py is None:
+            self.rotpyLE.setText('0.0')
+            py = 0
+        if angle is None:
+            self.angleLE.setText('0.0')
+            angle = 0
+
+        w, h = self.canvas.width(), self.canvas.height()
+        piv = remap_back(QtCore.QPointF(px, py), w, h)
+        self.canvas.obj.rotateObject(piv, angle * 3.1416 / 180)
+        self.canvas.update()
+
+    def scaleFigure(self):
+        px = self.tryGetLineEditData(self.scalepxLE, vdefault=None)
+        py = self.tryGetLineEditData(self.scalepyLE, vdefault=None)
+        kx = self.tryGetLineEditData(self.kxLE, vdefault=None)
+        ky = self.tryGetLineEditData(self.kyLE, vdefault=None)
+
+        if px is None:
+            self.scalepxLE.setText('0.0')
+            px = 0
+        if py is None:
+            self.scalepyLE.setText('0.0')
+            py = 0
+        if kx is None:
+            self.kxLE.setText('1.0')
+            kx = 1
+        if ky is None:
+            self.kyLE.setText('1.0')
+            ky = 1
+
+        w, h = self.canvas.width(), self.canvas.height()
+        piv = remap_back(QtCore.QPointF(px, py), w, h)
+        self.canvas.obj.scaleObject(piv, [kx, ky])
+        self.canvas.update()
+
+    def undo(self):
+        self.canvas.obj.undo()
+        self.canvas.update()
+
+    def reset(self):
+        self.canvas.obj.reset()
         self.canvas.update()
 
 app = QtWidgets.QApplication(sys.argv)

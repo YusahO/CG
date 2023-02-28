@@ -9,6 +9,8 @@ EPS = 1e-5
 class Figure:
     def __init__(self, *args):
         self.pts = list(args)
+        self.initial_pts = deepcopy(self.pts)
+        self.previous_pts = deepcopy(self.pts)
 
     def paint(self, painter, closed=True):
         for i in range(len(self.pts) - 1):
@@ -17,6 +19,7 @@ class Figure:
             painter.drawLine(self.pts[-1], self.pts[0])  
 
     def scale_object(self, piv, k):
+        self.previous_pts = deepcopy(self.pts)
         scale_mat = ScaleMat3(*k)
         for i in range(len(self.pts)):
             res = Mat([self.pts[i].x(), self.pts[i].y(), 1], (1, 3)) * TranslationMat3(-piv.x(), -piv.y())
@@ -24,6 +27,7 @@ class Figure:
             self.pts[i] = QtCore.QPointF(res[0][0], res[0][1])
 
     def rotate_object(self, piv, angle):
+        self.previous_pts = deepcopy(self.pts)
         rot_mat = RotationMat3(angle)
         for i in range(len(self.pts)):
             res = Mat([self.pts[i].x(), self.pts[i].y(), 1], (1, 3)) * TranslationMat3(-piv.x(), -piv.y())
@@ -31,20 +35,18 @@ class Figure:
             self.pts[i] = QtCore.QPointF(res[0][0], res[0][1])
 
     def translate_object(self, d):
+        self.previous_pts = deepcopy(self.pts)
         translation_mat = TranslationMat3(*d)
         for i in range(len(self.pts)):
             res = Mat([self.pts[i].x(), self.pts[i].y(), 1], (1, 3)) * translation_mat
             self.pts[i] = QtCore.QPointF(res[0][0], res[0][1])
 
-    def apply_transforms(self, piv, transforms):
-        if transforms is None or piv is None:
-            return
-        
-        self.scale_object(piv, transforms[2])
-        self.rotate_object(piv, transforms[1])
-        self.translate_object(transforms[0])
+    def undo(self):
+        self.pts = self.previous_pts
 
-    
+    def reset(self):
+        self.pts = self.initial_pts
+
 class Ellipse(Figure):
     def __init__(self, c, n, a, b):
         self.n = n
@@ -54,6 +56,10 @@ class Ellipse(Figure):
         self.pts = [c for _ in range(n)]
 
         self.__calculate_ellipse()
+
+        self.initial_pts = deepcopy(self.pts)
+        self.previous_pts = deepcopy(self.pts)
+
 
     def get_points_on_ellipse(self, a, r1, r2):
         return QtCore.QPointF(r1 * m.cos(a), r2 * m.sin(a))
@@ -79,6 +85,9 @@ class Circle(Figure):
 
         self.__calculate_circle()
 
+        self.initial_pts = deepcopy(self.pts)
+        self.previous_pts = deepcopy(self.pts)
+
     def get_points_on_ellipse(self, a, r):
         return QtCore.QPointF(r * m.cos(a), r * m.sin(a))
 
@@ -99,9 +108,12 @@ class Arc(Figure):
         self.b = b
         self.start = start
         self.end = end
-
         self.pts = [c for _ in range(n)]
+
         self.__calculate_arc()
+
+        self.initial_pts = deepcopy(self.pts)
+        self.previous_pts = deepcopy(self.pts)
 
     def get_points_on_ellipse(self, a, r1, r2):
         return QtCore.QPointF(r1 * m.cos(a), r2 * m.sin(a))
@@ -124,18 +136,28 @@ class BugObject(Figure):
         self.n = n
         self.calculatePoints(self.c)
 
-    def transformObject(self, piv, transform):
-        self.body.apply_transforms(piv, transform)
-        self.head.apply_transforms(piv, transform)
-        self.smile.apply_transforms(piv, transform)
-        self.leftEye.apply_transforms(piv, transform)
-        self.rightEye.apply_transforms(piv, transform)
-        self.leftArm.apply_transforms(piv, transform)
-        self.rightArm.apply_transforms(piv, transform)
-        self.leftWhisker.apply_transforms(piv, transform)
-        self.rightWhisker.apply_transforms(piv, transform)
-        self.leftLeg.apply_transforms(piv, transform)
-        self.rightLeg.apply_transforms(piv, transform)
+    def translateObject(self, d: list[float, float]):
+        for f in vars(self).values():
+            if type(f) in (Figure, *Figure.__subclasses__()):
+                f.translate_object(d)
+    
+    def rotateObject(self, piv, angle):
+        for f in vars(self).values():
+            if type(f) in (Figure, *Figure.__subclasses__()):
+                f.rotate_object(piv, angle)
+
+    def scaleObject(self, piv, k):
+        for f in vars(self).values():
+            if type(f) in (Figure, *Figure.__subclasses__()):
+                f.scale_object(piv, k)
+
+    def undo(self):
+        for f in vars(self).values():
+            if type(f) in (Figure, *Figure.__subclasses__()):
+                f.undo()
+
+    def reset(self):
+        self.calculatePoints(self.c)
 
     def paint(self, painter):
         self.body.paint(painter)
