@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>886</width>
-    <height>831</height>
+    <width>1172</width>
+    <height>890</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,13 +22,64 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>120</height>
+          <height>170</height>
          </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
         </property>
         <property name="title">
          <string>Рисовать</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_3">
+         <item row="5" column="0" colspan="5">
+          <widget class="QPushButton" name="drawButton">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Поставить точку</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QLineEdit" name="deleteLE">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="placeholderText">
+            <string>номер</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <widget class="QLineEdit" name="pyLE">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="placeholderText">
+            <string>y</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Удалить точку:</string>
+           </property>
+          </widget>
+         </item>
          <item row="1" column="1">
           <widget class="QLabel" name="pointLabel">
            <property name="text">
@@ -36,24 +87,27 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="0" colspan="5">
-          <widget class="QPushButton" name="drawButton">
-           <property name="text">
-            <string>Нарисовать</string>
-           </property>
-          </widget>
-         </item>
          <item row="1" column="2">
           <widget class="QLineEdit" name="pxLE">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
            <property name="placeholderText">
             <string>x</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="3">
-          <widget class="QLineEdit" name="pyLE">
-           <property name="placeholderText">
-            <string>y</string>
+         <item row="6" column="0" colspan="4">
+          <widget class="QPushButton" name="deleteButton">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Удалить точку</string>
            </property>
           </widget>
          </item>
@@ -62,32 +116,6 @@
       </item>
       <item>
        <layout class="QGridLayout" name="statLayout" columnstretch="0,0,0,0,0">
-        <item row="3" column="4" rowspan="3">
-         <widget class="QLabel" name="minDiffLabel">
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>20</height>
-           </size>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="2" rowspan="3">
-         <widget class="QLabel" name="posLabel">
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>20</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>Текущая позиция:</string>
-          </property>
-         </widget>
-        </item>
         <item row="5" column="3">
          <widget class="QLabel" name="minAreaLabel">
           <property name="sizePolicy">
@@ -101,6 +129,11 @@
             <width>16777215</width>
             <height>20</height>
            </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
           </property>
           <property name="text">
            <string/>
@@ -121,6 +154,47 @@
             <height>20</height>
            </size>
           </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2" rowspan="3">
+         <widget class="QLabel" name="posLabel">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Текущая позиция:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="4" rowspan="3">
+         <widget class="QLabel" name="minDiffLabel">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -130,12 +204,35 @@
       </item>
       <item>
        <widget class="QPushButton" name="findTriangleButton">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string>Найти треугольник</string>
         </property>
        </widget>
       </item>
      </layout>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="errorLabel">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>50</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Поле вывода ошибок</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -144,7 +241,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>886</width>
+     <width>1172</width>
      <height>30</height>
     </rect>
    </property>
@@ -155,6 +252,7 @@
     <addaction name="clearCanvasAction"/>
     <addaction name="separator"/>
     <addaction name="undoAction"/>
+    <addaction name="showAction"/>
    </widget>
    <addaction name="menu"/>
   </widget>
@@ -177,6 +275,11 @@
   <action name="undoAction">
    <property name="text">
     <string>Отменить действие</string>
+   </property>
+  </action>
+  <action name="showAction">
+   <property name="text">
+    <string>Условие</string>
    </property>
   </action>
  </widget>

@@ -11,12 +11,20 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>ЛР2 по компьютерной графике Шубенина Дарья ИУ7-41Б</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0">
     <item>
-     <widget class="Canvas" name="canvas" native="true"/>
+     <widget class="Canvas" name="canvas" native="true">
+      <property name="font">
+       <font>
+        <pointsize>18</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+     </widget>
     </item>
     <item>
      <layout class="QVBoxLayout" name="verticalLayout" stretch="2,2,2,1">
@@ -24,13 +32,15 @@
        <widget class="QGroupBox" name="translateGB">
         <property name="maximumSize">
          <size>
-          <width>350</width>
+          <width>450</width>
           <height>16777215</height>
          </size>
         </property>
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
+          <pointsize>18</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
         </property>
         <property name="title">
@@ -41,7 +51,9 @@
           <widget class="QLineEdit" name="dxLE">
            <property name="font">
             <font>
-             <pointsize>12</pointsize>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="alignment">
@@ -56,7 +68,9 @@
           <widget class="QLineEdit" name="dyLE">
            <property name="font">
             <font>
-             <pointsize>12</pointsize>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="alignment">
@@ -69,6 +83,13 @@
          </item>
          <item row="5" column="0" colspan="4">
           <widget class="QPushButton" name="translatePB">
+           <property name="font">
+            <font>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Выполнить</string>
            </property>
@@ -76,6 +97,13 @@
          </item>
          <item row="2" column="0" colspan="2">
           <widget class="QLabel" name="label">
+           <property name="font">
+            <font>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Смещение</string>
            </property>
@@ -83,6 +111,13 @@
          </item>
          <item row="4" column="0" colspan="4">
           <spacer name="verticalSpacer_2">
+           <property name="font">
+            <font>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
@@ -101,13 +136,15 @@
        <widget class="QGroupBox" name="rotateGB">
         <property name="maximumSize">
          <size>
-          <width>350</width>
+          <width>450</width>
           <height>16777215</height>
          </size>
         </property>
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
+          <pointsize>18</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
         </property>
         <property name="title">
@@ -118,7 +155,9 @@
           <widget class="QLineEdit" name="rotpxLE">
            <property name="font">
             <font>
-             <pointsize>12</pointsize>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="alignment">
@@ -133,7 +172,9 @@
           <widget class="QLineEdit" name="rotpyLE">
            <property name="font">
             <font>
-             <pointsize>12</pointsize>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="alignment">
@@ -148,19 +189,28 @@
           <widget class="QLineEdit" name="angleLE">
            <property name="font">
             <font>
-             <pointsize>12</pointsize>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
            <property name="placeholderText">
-            <string>angle</string>
+            <string>угол</string>
            </property>
           </widget>
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="label_2">
+           <property name="font">
+            <font>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Центр</string>
            </property>
@@ -168,6 +218,13 @@
          </item>
          <item row="3" column="0">
           <widget class="QLabel" name="label_3">
+           <property name="font">
+            <font>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Угол (в градусах)</string>
            </property>
@@ -175,6 +232,13 @@
          </item>
          <item row="5" column="0" colspan="3">
           <widget class="QPushButton" name="rotatePB">
+           <property name="font">
+            <font>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Выполнить</string>
            </property>
@@ -182,6 +246,13 @@
          </item>
          <item row="4" column="0" colspan="3">
           <spacer name="verticalSpacer">
+           <property name="font">
+            <font>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
@@ -200,13 +271,15 @@
        <widget class="QGroupBox" name="scaleGB">
         <property name="maximumSize">
          <size>
-          <width>350</width>
+          <width>450</width>
           <height>16777215</height>
          </size>
         </property>
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
+          <pointsize>18</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
         </property>
         <property name="title">
@@ -217,7 +290,9 @@
           <widget class="QLineEdit" name="kyLE">
            <property name="font">
             <font>
-             <pointsize>12</pointsize>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="alignment">
@@ -232,7 +307,9 @@
           <widget class="QLineEdit" name="scalepxLE">
            <property name="font">
             <font>
-             <pointsize>12</pointsize>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="alignment">
@@ -247,7 +324,9 @@
           <widget class="QLineEdit" name="scalepyLE">
            <property name="font">
             <font>
-             <pointsize>12</pointsize>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="alignment">
@@ -262,7 +341,9 @@
           <widget class="QLineEdit" name="kxLE">
            <property name="font">
             <font>
-             <pointsize>12</pointsize>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="alignment">
@@ -275,6 +356,13 @@
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="label_4">
+           <property name="font">
+            <font>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Центр</string>
            </property>
@@ -282,6 +370,13 @@
          </item>
          <item row="3" column="0">
           <widget class="QLabel" name="label_5">
+           <property name="font">
+            <font>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Коэффициенты</string>
            </property>
@@ -289,6 +384,13 @@
          </item>
          <item row="5" column="0" colspan="3">
           <widget class="QPushButton" name="scalePB">
+           <property name="font">
+            <font>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Выполнить</string>
            </property>
@@ -296,6 +398,13 @@
          </item>
          <item row="4" column="0" colspan="3">
           <spacer name="verticalSpacer_3">
+           <property name="font">
+            <font>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
@@ -314,9 +423,16 @@
        <widget class="QGroupBox" name="commonGB">
         <property name="maximumSize">
          <size>
-          <width>350</width>
+          <width>450</width>
           <height>16777215</height>
          </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>18</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
         </property>
         <property name="title">
          <string/>
@@ -326,7 +442,9 @@
           <widget class="QPushButton" name="undoPB">
            <property name="font">
             <font>
-             <pointsize>12</pointsize>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="text">
@@ -338,7 +456,9 @@
           <widget class="QPushButton" name="resetPB">
            <property name="font">
             <font>
-             <pointsize>12</pointsize>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="text">
@@ -350,7 +470,9 @@
           <widget class="QCheckBox" name="centerCB">
            <property name="font">
             <font>
-             <pointsize>12</pointsize>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
             </font>
            </property>
            <property name="text">
@@ -374,9 +496,23 @@
      <x>0</x>
      <y>0</y>
      <width>1170</width>
-     <height>30</height>
+     <height>46</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>18</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Об авторе</string>
+    </property>
+    <addaction name="action_7_41"/>
+   </widget>
+   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="clearCanvasAction">
@@ -397,6 +533,18 @@
   <action name="undoAction">
    <property name="text">
     <string>Отменить действие</string>
+   </property>
+  </action>
+  <action name="action_7_41">
+   <property name="text">
+    <string>ИУ7-41Б Шубенина Дарья</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>18</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
    </property>
   </action>
  </widget>

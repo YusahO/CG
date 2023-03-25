@@ -21,7 +21,7 @@ class Canvas(QtWidgets.QWidget):
             Qt.red, 2, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin)
         self.painter = QtGui.QPainter()
 
-        self.obj = fig.BugObject(self.objectCenter, 25)
+        self.obj = fig.BugObject(self.objectCenter)
 
         self.update()
 
@@ -46,15 +46,21 @@ class Canvas(QtWidgets.QWidget):
     def paintEvent(self, event):
         self.painter.begin(self)
         self.pen.setStyle(Qt.DashLine)
-        self.pen.setColor(Qt.gray)
+        self.pen.setColor(Qt.black)
         self.pen.setDashOffset(3)
-        self.pen.setWidth(1)
+        self.pen.setWidth(2)
         self.painter.setPen(self.pen)
 
         self.painter.fillRect(0, 0, self.width(), self.height(), Qt.white)
 
         self.painter.drawLine(QtCore.QPoint(self.width() // 2, self.height()), QtCore.QPoint(self.width() // 2, 0))
         self.painter.drawLine(QtCore.QPoint(0, self.height() // 2), QtCore.QPoint(self.width(), self.height() // 2))
+
+        self.painter.drawLine(QtCore.QPoint(self.width() - 10, self.height() // 2 + 10), QtCore.QPoint(self.width(), self.height() // 2))
+        self.painter.drawLine(QtCore.QPoint(self.width() - 10, self.height() // 2 - 10), QtCore.QPoint(self.width(), self.height() // 2))
+
+        self.painter.drawLine(QtCore.QPoint(self.width() // 2, 0), QtCore.QPoint(self.width() // 2 - 10, 10))
+        self.painter.drawLine(QtCore.QPoint(self.width() // 2, 0), QtCore.QPoint(self.width() // 2 + 10, 10))
 
         self.pen.setWidth(8)
         self.pen.setColor(Qt.red)
