@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1286</width>
-    <height>1065</height>
+    <width>1303</width>
+    <height>1074</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,7 +16,13 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QWidget" name="widget" native="true"/>
+     <widget class="Canvas" name="canvas" native="true">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </widget>
     </item>
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
@@ -36,7 +42,7 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>16</pointsize>
+          <pointsize>14</pointsize>
           <weight>75</weight>
           <bold>true</bold>
          </font>
@@ -48,14 +54,31 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
-            <widget class="QRadioButton" name="cdaRB">
+            <widget class="QRadioButton" name="ddaRB">
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
               <string>Цифровой дифференциальный анализатор</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QRadioButton" name="brFloatRB">
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
               <string>Брезенхем (float)</string>
              </property>
@@ -63,6 +86,13 @@
            </item>
            <item>
             <widget class="QRadioButton" name="brIntRB">
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
               <string>Брезенхем (integer)</string>
              </property>
@@ -70,6 +100,13 @@
            </item>
            <item>
             <widget class="QRadioButton" name="brAARB">
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
               <string>Брезенхем (с устранением ступенчатости)</string>
              </property>
@@ -77,6 +114,13 @@
            </item>
            <item>
             <widget class="QRadioButton" name="vuRB">
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
               <string>Ву</string>
              </property>
@@ -84,6 +128,13 @@
            </item>
            <item>
             <widget class="QRadioButton" name="libRB">
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
               <string>Библиотечная функция</string>
              </property>
@@ -110,7 +161,7 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>16</pointsize>
+          <pointsize>14</pointsize>
           <weight>75</weight>
           <bold>true</bold>
          </font>
@@ -122,10 +173,10 @@
          <item row="0" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <widget class="ColorButton" name="lineColSwatch">
+            <widget class="LineColorButton" name="lineColSwatch">
              <property name="maximumSize">
               <size>
-               <width>65</width>
+               <width>57</width>
                <height>16777215</height>
               </size>
              </property>
@@ -145,10 +196,10 @@
             </widget>
            </item>
            <item>
-            <widget class="ColorButton" name="lineColSwatch_2">
+            <widget class="LineColorButton" name="lineColSwatch_2">
              <property name="maximumSize">
               <size>
-               <width>65</width>
+               <width>57</width>
                <height>16777215</height>
               </size>
              </property>
@@ -168,10 +219,10 @@
             </widget>
            </item>
            <item>
-            <widget class="ColorButton" name="lineColSwatch_3">
+            <widget class="LineColorButton" name="lineColSwatch_3">
              <property name="maximumSize">
               <size>
-               <width>65</width>
+               <width>57</width>
                <height>16777215</height>
               </size>
              </property>
@@ -191,10 +242,10 @@
             </widget>
            </item>
            <item>
-            <widget class="ColorButton" name="lineColSwatch_4">
+            <widget class="LineColorButton" name="lineColSwatch_4">
              <property name="maximumSize">
               <size>
-               <width>65</width>
+               <width>57</width>
                <height>16777215</height>
               </size>
              </property>
@@ -214,10 +265,33 @@
             </widget>
            </item>
            <item>
-            <widget class="ColorButton" name="lineColSwatch_5">
+            <widget class="LineColorButton" name="lineColSwatch_7">
              <property name="maximumSize">
               <size>
-               <width>65</width>
+               <width>57</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 127, 0)</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="LineColorButton" name="lineColSwatch_5">
+             <property name="maximumSize">
+              <size>
+               <width>57</width>
                <height>16777215</height>
               </size>
              </property>
@@ -237,10 +311,10 @@
             </widget>
            </item>
            <item>
-            <widget class="ColorButton" name="lineColSwatch_6">
+            <widget class="LineColorButton" name="lineColSwatch_6">
              <property name="maximumSize">
               <size>
-               <width>65</width>
+               <width>57</width>
                <height>16777215</height>
               </size>
              </property>
@@ -263,6 +337,13 @@
          </item>
          <item row="2" column="0">
           <widget class="QLabel" name="label_2">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Цвет фона</string>
            </property>
@@ -270,6 +351,13 @@
          </item>
          <item row="3" column="1">
           <widget class="QPushButton" name="bgColPB">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Выбрать другой цвет фона</string>
            </property>
@@ -278,10 +366,10 @@
          <item row="2" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
-            <widget class="ColorButton" name="bgColSwatch">
+            <widget class="BgColorButton" name="bgColSwatch">
              <property name="maximumSize">
               <size>
-               <width>65</width>
+               <width>57</width>
                <height>16777215</height>
               </size>
              </property>
@@ -301,10 +389,10 @@
             </widget>
            </item>
            <item>
-            <widget class="ColorButton" name="bgColSwatch_2">
+            <widget class="BgColorButton" name="bgColSwatch_2">
              <property name="maximumSize">
               <size>
-               <width>65</width>
+               <width>57</width>
                <height>16777215</height>
               </size>
              </property>
@@ -324,10 +412,10 @@
             </widget>
            </item>
            <item>
-            <widget class="ColorButton" name="bgColSwatch_3">
+            <widget class="BgColorButton" name="bgColSwatch_3">
              <property name="maximumSize">
               <size>
-               <width>65</width>
+               <width>57</width>
                <height>16777215</height>
               </size>
              </property>
@@ -347,10 +435,10 @@
             </widget>
            </item>
            <item>
-            <widget class="ColorButton" name="bgColSwatch_4">
+            <widget class="BgColorButton" name="bgColSwatch_4">
              <property name="maximumSize">
               <size>
-               <width>65</width>
+               <width>57</width>
                <height>16777215</height>
               </size>
              </property>
@@ -370,10 +458,33 @@
             </widget>
            </item>
            <item>
-            <widget class="ColorButton" name="bgColSwatch_5">
+            <widget class="BgColorButton" name="bgColSwatch_7">
              <property name="maximumSize">
               <size>
-               <width>65</width>
+               <width>57</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 127, 0)</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="BgColorButton" name="bgColSwatch_5">
+             <property name="maximumSize">
+              <size>
+               <width>57</width>
                <height>16777215</height>
               </size>
              </property>
@@ -393,10 +504,10 @@
             </widget>
            </item>
            <item>
-            <widget class="ColorButton" name="bgColSwatch_6">
+            <widget class="BgColorButton" name="bgColSwatch_6">
              <property name="maximumSize">
               <size>
-               <width>65</width>
+               <width>57</width>
                <height>16777215</height>
               </size>
              </property>
@@ -419,8 +530,15 @@
          </item>
          <item row="0" column="0">
           <widget class="QLabel" name="label">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
-            <string>Цвет линии</string>
+            <string>Цвет отрезка</string>
            </property>
           </widget>
          </item>
@@ -428,6 +546,13 @@
           <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,1,1,1">
            <item>
             <spacer name="horizontalSpacer_4">
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -441,8 +566,15 @@
            </item>
            <item>
             <widget class="QLabel" name="label_7">
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
-              <string>Текущий цвет линии</string>
+              <string>Выбранный цвет отрезка</string>
              </property>
             </widget>
            </item>
@@ -470,6 +602,9 @@
                <bold>false</bold>
               </font>
              </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(0,0,0)</string>
+             </property>
              <property name="text">
               <string/>
              </property>
@@ -489,6 +624,13 @@
            </item>
            <item>
             <spacer name="horizontalSpacer_3">
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -504,6 +646,13 @@
          </item>
          <item row="4" column="0" colspan="2">
           <widget class="Line" name="line">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -511,8 +660,15 @@
          </item>
          <item row="1" column="1">
           <widget class="QPushButton" name="lineColPB">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
-            <string>Выбрать другой цвет линии</string>
+            <string>Выбрать другой цвет отрезка</string>
            </property>
           </widget>
          </item>
@@ -535,7 +691,7 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>15</pointsize>
+          <pointsize>14</pointsize>
           <weight>75</weight>
           <bold>true</bold>
          </font>
@@ -544,91 +700,76 @@
          <string>Построение отрезка</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_4" columnstretch="1,0">
-         <item row="1" column="0" colspan="2">
-          <layout class="QHBoxLayout" name="horizontalLayout_4">
-           <item>
-            <spacer name="horizontalSpacer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_6">
-             <property name="text">
-              <string>Длина (в пикселах)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="lengthLE"/>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_2">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </item>
-         <item row="0" column="1">
-          <widget class="QGroupBox" name="groupBox_5">
-           <property name="title">
-            <string>Спектром</string>
-           </property>
-           <layout class="QGridLayout" name="gridLayout_3">
-            <item row="0" column="1">
-             <widget class="QLineEdit" name="angleLE">
-              <property name="placeholderText">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_5">
-              <property name="text">
-               <string>Угол (а градусах)</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
          <item row="0" column="0">
           <widget class="QGroupBox" name="groupBox_4">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="title">
             <string>По координатам</string>
            </property>
            <layout class="QGridLayout" name="gridLayout">
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_3">
-              <property name="text">
-               <string>Начало</string>
+            <item row="1" column="1">
+             <widget class="QLineEdit" name="xEndLE">
+              <property name="font">
+               <font>
+                <pointsize>14</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+              <property name="placeholderText">
+               <string>x</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_4">
-              <property name="text">
-               <string>Конец</string>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="xStartLE">
+              <property name="font">
+               <font>
+                <pointsize>14</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+              <property name="placeholderText">
+               <string>x</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="2">
-             <widget class="QLineEdit" name="yEndLE">
+            <item row="3" column="0" colspan="3">
+             <widget class="QPushButton" name="drawSegPB">
+              <property name="font">
+               <font>
+                <pointsize>14</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Построить</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QLineEdit" name="yStartLE">
+              <property name="font">
+               <font>
+                <pointsize>14</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
@@ -637,8 +778,117 @@
               </property>
              </widget>
             </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="font">
+               <font>
+                <pointsize>14</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Начало</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QLineEdit" name="yEndLE">
+              <property name="font">
+               <font>
+                <pointsize>14</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+              <property name="placeholderText">
+               <string>y</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_4">
+              <property name="font">
+               <font>
+                <pointsize>14</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Конец</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <spacer name="verticalSpacer">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QGroupBox" name="groupBox_5">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="title">
+            <string>Спектром</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_3">
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="font">
+               <font>
+                <pointsize>14</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Угол, градусы</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_6">
+              <property name="font">
+               <font>
+                <pointsize>14</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Длина, пикс.</string>
+              </property>
+             </widget>
+            </item>
             <item row="0" column="1">
-             <widget class="QLineEdit" name="xStartLE">
+             <widget class="QLineEdit" name="cxLE">
+              <property name="font">
+               <font>
+                <pointsize>14</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
@@ -648,7 +898,14 @@
              </widget>
             </item>
             <item row="0" column="2">
-             <widget class="QLineEdit" name="yStartLE">
+             <widget class="QLineEdit" name="cyLE">
+              <property name="font">
+               <font>
+                <pointsize>14</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
@@ -657,13 +914,55 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
-             <widget class="QLineEdit" name="xEndLE">
+            <item row="1" column="1" colspan="2">
+             <widget class="QLineEdit" name="angleLE">
+              <property name="font">
+               <font>
+                <pointsize>14</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
               <property name="placeholderText">
-               <string>x</string>
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1" colspan="2">
+             <widget class="QLineEdit" name="lengthLE">
+              <property name="font">
+               <font>
+                <pointsize>14</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0" colspan="3">
+             <widget class="QPushButton" name="drawSpectrumPB">
+              <property name="font">
+               <font>
+                <pointsize>14</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Построить</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_8">
+              <property name="text">
+               <string>Центр</string>
               </property>
              </widget>
             </item>
@@ -683,7 +982,7 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>15</pointsize>
+          <pointsize>14</pointsize>
           <weight>75</weight>
           <bold>true</bold>
          </font>
@@ -694,6 +993,13 @@
         <layout class="QGridLayout" name="gridLayout_5">
          <item row="0" column="0">
           <widget class="QPushButton" name="timeCompPB">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Сравнение времени</string>
            </property>
@@ -701,6 +1007,13 @@
          </item>
          <item row="0" column="1">
           <widget class="QPushButton" name="aliasCompPB">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Сравнение ступенчатости</string>
            </property>
@@ -708,6 +1021,13 @@
          </item>
          <item row="2" column="0" colspan="2">
           <widget class="QPushButton" name="clearPB">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
             <string>Очистить экран</string>
            </property>
@@ -725,7 +1045,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1286</width>
+     <width>1303</width>
      <height>40</height>
     </rect>
    </property>
@@ -760,14 +1080,25 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ColorButton</class>
-   <extends>QPushButton</extends>
-   <header>colorbutton</header>
-  </customwidget>
-  <customwidget>
    <class>ColorView</class>
    <extends>QPushButton</extends>
    <header>colorview</header>
+  </customwidget>
+  <customwidget>
+   <class>Canvas</class>
+   <extends>QWidget</extends>
+   <header>canvas</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>LineColorButton</class>
+   <extends>QPushButton</extends>
+   <header>linecolorbutton</header>
+  </customwidget>
+  <customwidget>
+   <class>BgColorButton</class>
+   <extends>QPushButton</extends>
+   <header>bgcolorbutton</header>
   </customwidget>
  </customwidgets>
  <resources/>
