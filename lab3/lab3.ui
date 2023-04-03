@@ -722,6 +722,9 @@
                 <bold>true</bold>
                </font>
               </property>
+              <property name="text">
+               <string>500</string>
+              </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
@@ -738,6 +741,9 @@
                 <weight>75</weight>
                 <bold>true</bold>
                </font>
+              </property>
+              <property name="text">
+               <string>100</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -770,6 +776,9 @@
                 <bold>true</bold>
                </font>
               </property>
+              <property name="text">
+               <string>100</string>
+              </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
@@ -800,6 +809,9 @@
                 <weight>75</weight>
                 <bold>true</bold>
                </font>
+              </property>
+              <property name="text">
+               <string>500</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -889,6 +901,9 @@
                 <bold>true</bold>
                </font>
               </property>
+              <property name="text">
+               <string>500</string>
+              </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
@@ -905,6 +920,9 @@
                 <weight>75</weight>
                 <bold>true</bold>
                </font>
+              </property>
+              <property name="text">
+               <string>500</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -923,6 +941,9 @@
                 <bold>true</bold>
                </font>
               </property>
+              <property name="text">
+               <string>30</string>
+              </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
@@ -939,6 +960,9 @@
                 <weight>75</weight>
                 <bold>true</bold>
                </font>
+              </property>
+              <property name="text">
+               <string>200</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>

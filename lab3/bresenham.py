@@ -1,9 +1,9 @@
 from PyQt5.QtGui import QColor
 from numpy import sign
 
-from utils import get_intensity_gradient
+from utils import remap
 
-def bresenham_float(x1, y1, x2, y2, color, stepmode=False):
+def bresenham_float(x1, y1, x2, y2, color = QColor(0,0,0), stepmode=False):
     pts = []
 
     if x1 == x2 and y1 == y2:
@@ -24,8 +24,8 @@ def bresenham_float(x1, y1, x2, y2, color, stepmode=False):
     xcur = x1
     ycur = y1
 
-    xb = x1
-    yb = y1
+    xprev = x1
+    yprev = y1
     steps = 0
     while xcur != x2 or ycur != y2:
         if not stepmode:
@@ -46,17 +46,17 @@ def bresenham_float(x1, y1, x2, y2, color, stepmode=False):
             error += m
 
         if stepmode:
-            if xb != xcur and yb != ycur:
+            if xprev != xcur and yprev != ycur:
                 steps += 1
-            xb = xcur
-            yb = ycur
+            xprev = xcur
+            yprev = ycur
     
     if stepmode:
         return steps
     
     return pts
 
-def bresenham_integer(x1, y1, x2, y2, color, stepmode=False):
+def bresenham_integer(x1, y1, x2, y2, color = QColor(0,0,0), stepmode=False):
     pts = []
 
     if x1 == x2 and y1 == y2:
@@ -76,8 +76,8 @@ def bresenham_integer(x1, y1, x2, y2, color, stepmode=False):
     xcur = x1
     ycur = y1
 
-    xb = x1
-    yb = y1
+    xprev = x1
+    yprev = y1
     steps = 0
     while xcur != x2 or ycur != y2:
         if not stepmode:
@@ -98,24 +98,21 @@ def bresenham_integer(x1, y1, x2, y2, color, stepmode=False):
             error += 2 * dy
 
         if stepmode:
-            if xb != xcur and yb != ycur:
+            if xprev != xcur and yprev != ycur:
                 steps += 1
-            xb = xcur
-            yb = ycur
+            xprev = xcur
+            yprev = ycur
     
     if stepmode:
         return steps
     
     return pts
 
-def bresenham_aa(x1, y1, x2, y2, color, bgColor, stepmode=False):
+def bresenham_aa(x1, y1, x2, y2, color = QColor(0,0,0), intensity=100, stepmode=False):
     pts = []
 
     if x1 == x2 and y1 == y2:
         return [(x1, y1, color)]
-    
-    I = 100
-    gradient = get_intensity_gradient(color, bgColor, I)
 
     dx, dy = x2 - x1,  y2 - y1
     sx, sy = sign(dx), sign(dy)
@@ -126,19 +123,20 @@ def bresenham_aa(x1, y1, x2, y2, color, bgColor, stepmode=False):
         dx, dy = dy, dx
         exchanged = 1
 
-    m = dy / dx * I
-    error = I / 2
-    w = I - m
+    m = dy / dx
+    error = .5
+    w = 1 - m
 
     xcur = x1
     ycur = y1
 
-    xb = x1
-    yb = y1 
+    xprev = x1
+    yprev = y1 
     steps = 0
     while xcur != x2 or ycur != y2:
         if not stepmode:
-            pts.append((xcur, ycur, gradient[round(error) - 1]))
+            a = error * intensity
+            pts.append((xcur, ycur, (color.red(), color.green(), color.blue(), round(remap(0, intensity, 0, 255, a)))))
 
         if error < w:
             if exchanged == 0:
@@ -153,10 +151,10 @@ def bresenham_aa(x1, y1, x2, y2, color, bgColor, stepmode=False):
             error -= w
 
         if stepmode:
-            if xb != xcur and yb != ycur:
+            if xprev != xcur and yprev != ycur:
                 steps += 1
-            xb = xcur
-            yb = ycur
+            xprev = xcur
+            yprev = ycur
     
     if stepmode:
         return steps

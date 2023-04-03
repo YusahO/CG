@@ -1,47 +1,64 @@
 from PyQt5.QtGui import QColor
+from utils import remap
 
-from numpy import floor, modf
-from utils import get_intensity_gradient
+def fract(val):
+    return val - int(val)
 
-def vu(x1, y1, x2, y2, color, bgColor, stepmode=False):
+def vu(x1, y1, x2, y2, color = QColor(0,0,0), intensity=100, stepmode=False):
+
     if x1 == x2 and y1 == y2:
         return [(x1, y1, color)]
     
     pts = []
 
-    I = 100
-    gradient = get_intensity_gradient(color, bgColor, I)
-
-    exchanged = abs(y2 - y1) > abs(x2 - x1)
-    if exchanged:
-        x1, y1 = y1, x1
-        x2, y2 = y2, x2
-
-    if x2 < x1:
-        x1, x2 = x2, x1
-        y1, y2 = y2, y1
-
     dx = x2 - x1
     dy = y2 - y1
 
-    m = dy / dx if dx != 0 else 1
-
-    xend = round(x1)
-    yend = y1 + m * (xend - x1)
-    # xpx1 = xend
-    ycur = yend + m
-
-    xend = int(x2 + .5)
-    # xpx2 = xend
-
     steps = 0
 
-    if not exchanged:
-        for xcur in range(x1, x2):
-            pts.append((xcur, int(ycur), gradient[round((I - 1) * (abs(1 - ycur + floor(ycur))))]))
-            pts.append((xcur, int(ycur) + 1, gradient[round((I - 1) * (abs(1 - ycur + floor(ycur))))]))
+    step = 1
 
-            if stepmode and xcur < round(x2) and int(ycur) != int(ycur + m):
+    if abs(dy) >= abs(dx):
+        
+        m = dx / dy if dy != 0 else 1
+        ms = m
+        if y2 < y1:
+            ms *= -1
+            step *= -1
+
+        for ycur in range(y1, y2, step):
+            a1 = remap(0, intensity, 0, 255, intensity - fract(x1) * intensity)
+            a2 = 255 - a1
+
+            pts.append((int(x1),     ycur, (color.red(), color.green(), color.blue(), round(a1))))
+            pts.append((int(x1) + 1, ycur, (color.red(), color.green(), color.blue(), round(a2))))
+
+            if stepmode and ycur < round(y2) and int(x1) != int(x1 + m):
                 steps += 1
                 
-            ycur += m
+            x1 += m
+    else:
+
+        m = dy / dx if dx != 0 else 1
+        ms = m
+        
+        if x2 < x1:
+            ms *= -1
+            step *= -1
+
+        for xcur in range(x1, x2, step):
+            a1 = remap(0, intensity, 0, 255, intensity - fract(y1) * intensity)
+            a2 = 255 - a1
+
+            pts.append((xcur, int(y1),     (color.red(), color.green(), color.blue(), round(a1))))
+            pts.append((xcur, int(y1) + 1, (color.red(), color.green(), color.blue(), round(a2))))
+
+            if stepmode and xcur < round(x2) and int(y1) != int(y1 + m):
+                steps += 1
+                
+            y1 += m
+
+    if stepmode:
+        return steps
+    
+    return pts

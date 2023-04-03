@@ -97,5 +97,6 @@ class Canvas(QtWidgets.QWidget):
         self.__draw_bresenham_float(painter)
         self.__draw_bresenham_int(painter)
         self.__draw_bresenham_AA(painter)
+        self.__draw_vu(painter)
         self.__draw_lib(painter)
         painter.end()
