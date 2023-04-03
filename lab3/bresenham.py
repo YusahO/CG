@@ -112,7 +112,7 @@ def bresenham_aa(x1, y1, x2, y2, color = QColor(0,0,0), intensity=100, stepmode=
     pts = []
 
     if x1 == x2 and y1 == y2:
-        return [(x1, y1, color)]
+        return [(x1, y1, (color.red(), color.green(), color.blue(), 255))]
 
     dx, dy = x2 - x1,  y2 - y1
     sx, sy = sign(dx), sign(dy)
