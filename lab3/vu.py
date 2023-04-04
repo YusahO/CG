@@ -26,7 +26,7 @@ def vu(x1, y1, x2, y2, color = QColor(0,0,0), intensity=100, stepmode=False):
             ms *= -1
             step *= -1
 
-        for ycur in range(y1, y2, step):
+        for ycur in range(round(y1), round(y2), step):
             a1 = remap(0, intensity, 0, 255, intensity - fract(x1) * intensity)
             a2 = 255 - a1
 
@@ -46,7 +46,7 @@ def vu(x1, y1, x2, y2, color = QColor(0,0,0), intensity=100, stepmode=False):
             ms *= -1
             step *= -1
 
-        for xcur in range(x1, x2, step):
+        for xcur in range(round(x1), round(x2), step):
             a1 = remap(0, intensity, 0, 255, intensity - fract(y1) * intensity)
             a2 = 255 - a1
 

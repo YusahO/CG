@@ -72,15 +72,15 @@ class UI(QtWidgets.QMainWindow):
         return v
 
     def getSegmentPoints(self):
-        x1 = round(self.tryGetLineEditData(self.xStartLE, vmin=0))
-        y1 = round(self.tryGetLineEditData(self.yStartLE, vmin=0))
-        x2 = round(self.tryGetLineEditData(self.xEndLE, vmin=0))
-        y2 = round(self.tryGetLineEditData(self.yEndLE, vmin=0))
+        x1 = self.tryGetLineEditData(self.xStartLE, vmin=0)
+        y1 = self.tryGetLineEditData(self.yStartLE, vmin=0)
+        x2 = self.tryGetLineEditData(self.xEndLE, vmin=0)
+        y2 = self.tryGetLineEditData(self.yEndLE, vmin=0)
         return x1, y1, x2, y2
 
     def getSpectrumData(self):
-        cx = round(self.tryGetLineEditData(self.cxLE, vmin=0))
-        cy = round(self.tryGetLineEditData(self.cyLE, vmin=0))
+        cx = self.tryGetLineEditData(self.cxLE, vmin=0)
+        cy = self.tryGetLineEditData(self.cyLE, vmin=0)
         angle = self.tryGetLineEditData(self.angleLE, vmax=360)
         length = self.tryGetLineEditData(self.lengthLE)
         return cx, cy, angle, length

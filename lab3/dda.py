@@ -10,14 +10,18 @@ def dda(x1, y1, x2, y2, color=QColor(0, 0, 0), stepmode=False):
     dx = abs(x2 - x1)
     dy = abs(y2 - y1)
 
-    length = dx if dx >= dy else dy
+    length = dy
+    if dx >= dy:
+        length = dx
 
     dx = (x2 - x1) / length
     dy = (y2 - y1) / length
 
-    xcur, ycur = x1, y1
+    xcur = x1
+    ycur = y1
 
-    for _ in range(int(length) + 1):
+    i = 1
+    while i <= int(length):
         if not stepmode:
             pts.append((round(xcur), round(ycur), color))
         elif round(xcur + dx) != round(xcur) and round(ycur + dy) != round(ycur):
@@ -25,6 +29,8 @@ def dda(x1, y1, x2, y2, color=QColor(0, 0, 0), stepmode=False):
 
         xcur += dx
         ycur += dy
+
+        i += 1
 
     if stepmode:
         return steps
