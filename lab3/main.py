@@ -13,7 +13,7 @@ from utils import generate_spectrum
 from numpy import pi, sin, cos
 
 I = 100
-RUNS = 100
+RUNS = 30
 
 
 class UI(QtWidgets.QMainWindow):
@@ -88,34 +88,30 @@ class UI(QtWidgets.QMainWindow):
     def chooseAlg(self, pts):
         if self.ddaRB.isChecked():
             for p in pts:
-                self.canvas.dda_lines.append(dda(*p, self.colorview.color))
+                p = list(map(round, p))
+                self.canvas.lines.append(dda(*p, self.colorview.color))
         elif self.brFloatRB.isChecked():
             for p in pts:
-                self.canvas.bfloat_lines.append(
-                    bresenham_float(*p, self.colorview.color))
+                p = list(map(round, p))
+                self.canvas.lines.append(bresenham_float(*p, self.colorview.color))
         elif self.brIntRB.isChecked():
             for p in pts:
-                self.canvas.bint_lines.append(
-                    bresenham_integer(*p, self.colorview.color))
+                p = list(map(round, p))
+                self.canvas.lines.append(bresenham_integer(*p, self.colorview.color))
         elif self.brAARB.isChecked():
             for p in pts:
-                self.canvas.baa_lines.append(
-                    bresenham_aa(*p, self.colorview.color, I))
+                p = list(map(round, p))
+                self.canvas.lines.append(bresenham_aa(*p, self.colorview.color, I))
         elif self.vuRB.isChecked():
             for p in pts:
-                self.canvas.vu_lines.append(vu(*p, self.colorview.color, I))
+                p = list(map(round, p))
+                self.canvas.lines.append(vu(*p, self.colorview.color, I))
         elif self.libRB.isChecked():
             for p in pts:
-                self.canvas.lib_lines.append(
-                    (p[:2], p[2:], self.colorview.color))
+                self.canvas.lines.append((p[:2], p[2:], self.colorview.color, True))
 
     def clearCanvas(self):
-        self.canvas.dda_lines.clear()
-        self.canvas.bfloat_lines.clear()
-        self.canvas.bint_lines.clear()
-        self.canvas.baa_lines.clear()
-        self.canvas.vu_lines.clear()
-        self.canvas.lib_lines.clear()
+        self.canvas.lines.clear()
         self.canvas.update()
 
     def paintSegment(self):
@@ -159,7 +155,7 @@ class UI(QtWidgets.QMainWindow):
         plt.figure(figsize=(10, 6))
         plt.rcParams['font.size'] = '15'
         plt.title(
-            f"Скорость построения спектров (угол {angle:g}°, длина {length:g} пикс.)\nв зависимости от алгоритма")
+            f"Скорость построения спектров (угол {angle:g}°, длина {length:g})\nв зависимости от алгоритма")
 
         positions = [i for i in range(6)]
         methods = ["ЦДА", "Брезенхем\n(float)", "Брезенхем\n(int)",
@@ -205,7 +201,7 @@ class UI(QtWidgets.QMainWindow):
         plt.plot(angles, steps[3], '.-',  label="Брензенхем (устр. ступенч.)")
         plt.plot(angles, steps[4], '-.', label="By")
 
-        plt.title(f"Исследование ступенчатости.\nДлина отрезка: {length:g} пикс.")
+        plt.title(f"Исследование ступенчатости.\nДлина отрезка: {length:g}")
         plt.xticks([i for i in range(0, 91, 5)])
         plt.legend()
         plt.ylabel("Количество ступенек")

@@ -6,12 +6,16 @@ from utils import remap
 def bresenham_float(x1, y1, x2, y2, color = QColor(0,0,0), stepmode=False):
     pts = []
 
-    if x1 == x2 and y1 == y2:
-        return [(x1, y1, color)]
+    dx = x2 - x1
+    dy = y2 - y1
 
-    dx, dy = x2 - x1,  y2 - y1
+    if dx == 0 and dy == 0:
+        return [(x1, y1, color), False]
+
     sx, sy = sign(dx), sign(dy)
-    dx, dy = abs(dx),  abs(dy)
+
+    dx = abs(dx)
+    dy = abs(dy)
 
     exchanged = False
     if dy > dx:
@@ -57,22 +61,27 @@ def bresenham_float(x1, y1, x2, y2, color = QColor(0,0,0), stepmode=False):
     if stepmode:
         return steps
     
+    pts.append(False)
     return pts
 
 def bresenham_integer(x1, y1, x2, y2, color = QColor(0,0,0), stepmode=False):
     pts = []
 
-    if x1 == x2 and y1 == y2:
-        return [(x1, y1, color)]
+    dx = x2 - x1
+    dy = y2 - y1
 
-    dx, dy = x2 - x1,  y2 - y1
+    if dx == 0 and dy == 0:
+        return [(x1, y1, color), False]
+
     sx, sy = sign(dx), sign(dy)
-    dx, dy = abs(dx),  abs(dy)
 
-    exchanged = 0
+    dx = abs(dx)
+    dy = abs(dy)
+
+    exchanged = False
     if dy > dx:
         dx, dy = dy, dx
-        exchanged = 1
+        exchanged = True
 
     error = 2 * dy - dx
 
@@ -84,7 +93,7 @@ def bresenham_integer(x1, y1, x2, y2, color = QColor(0,0,0), stepmode=False):
     steps = 0
 
     i = 0
-    while xcur != x2 or ycur != y2:
+    while i <= dx:
         if not stepmode:
             pts.append((xcur, ycur, color))
 
@@ -106,21 +115,28 @@ def bresenham_integer(x1, y1, x2, y2, color = QColor(0,0,0), stepmode=False):
                 steps += 1
             xprev = xcur
             yprev = ycur
+
+        i += 1
     
     if stepmode:
         return steps
     
+    pts.append(False)
     return pts
 
 def bresenham_aa(x1, y1, x2, y2, color = QColor(0,0,0), intensity=100, stepmode=False):
     pts = []
 
-    if x1 == x2 and y1 == y2:
-        return [(x1, y1, (color.red(), color.green(), color.blue(), 255))]
+    dx = x2 - x1
+    dy = y2 - y1
 
-    dx, dy = x2 - x1,  y2 - y1
+    if dx == 0 and dy == 0:
+        return [(x1, y1, QColor(color.red(), color.green(), color.blue(), 255)), False]
+
     sx, sy = sign(dx), sign(dy)
-    dx, dy = abs(dx),  abs(dy)
+
+    dx = abs(x2 - x1)
+    dy = abs(y2 - y1)
 
     exchanged = False
     if dy > dx:
@@ -142,7 +158,7 @@ def bresenham_aa(x1, y1, x2, y2, color = QColor(0,0,0), intensity=100, stepmode=
     while i <= dx:
         if not stepmode:
             a = error * intensity
-            pts.append((xcur, ycur, (color.red(), color.green(), color.blue(), round(remap(0, intensity, 0, 255, a)))))
+            pts.append((xcur, ycur, QColor(color.red(), color.green(), color.blue(), round(remap(0, intensity, 0, 255, a)))))
 
         if error < w:
             if exchanged == 0:
@@ -167,5 +183,6 @@ def bresenham_aa(x1, y1, x2, y2, color = QColor(0,0,0), intensity=100, stepmode=
     
     if stepmode:
         return steps
-    
+
+    pts.append(False)
     return pts

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>КГ Лабораторная работа 3 Шубенина</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,0">
@@ -888,7 +888,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Длина, пикс.</string>
+               <string>Длина</string>
               </property>
              </widget>
             </item>
@@ -902,7 +902,7 @@
                </font>
               </property>
               <property name="text">
-               <string>500</string>
+               <string>700</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>

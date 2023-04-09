@@ -7,7 +7,7 @@ def fract(val):
 def vu(x1, y1, x2, y2, color = QColor(0,0,0), intensity=100, stepmode=False):
 
     if x1 == x2 and y1 == y2:
-        return [(x1, y1, (color.red(), color.green(), color.blue(), 255))]
+        return [(x1, y1, QColor(color.red(), color.green(), color.blue(), 255)), False]
     
     pts = []
 
@@ -30,8 +30,8 @@ def vu(x1, y1, x2, y2, color = QColor(0,0,0), intensity=100, stepmode=False):
             a1 = remap(0, intensity, 0, 255, intensity - fract(x1) * intensity)
             a2 = 255 - a1
 
-            pts.append((int(x1),     ycur, (color.red(), color.green(), color.blue(), round(a1))))
-            pts.append((int(x1) + 1, ycur, (color.red(), color.green(), color.blue(), round(a2))))
+            pts.append((int(x1),     ycur, QColor(color.red(), color.green(), color.blue(), round(a1))))
+            pts.append((int(x1) + 1, ycur, QColor(color.red(), color.green(), color.blue(), round(a2))))
 
             if stepmode and ycur < round(y2) and int(x1) != int(x1 + m):
                 steps += 1
@@ -41,7 +41,6 @@ def vu(x1, y1, x2, y2, color = QColor(0,0,0), intensity=100, stepmode=False):
 
         m = dy / dx if dx != 0 else 1
         ms = m
-        
         if x2 < x1:
             ms *= -1
             step *= -1
@@ -50,8 +49,8 @@ def vu(x1, y1, x2, y2, color = QColor(0,0,0), intensity=100, stepmode=False):
             a1 = remap(0, intensity, 0, 255, intensity - fract(y1) * intensity)
             a2 = 255 - a1
 
-            pts.append((xcur, int(y1),     (color.red(), color.green(), color.blue(), round(a1))))
-            pts.append((xcur, int(y1) + 1, (color.red(), color.green(), color.blue(), round(a2))))
+            pts.append((xcur, int(y1),     QColor(color.red(), color.green(), color.blue(), round(a1))))
+            pts.append((xcur, int(y1) + 1, QColor(color.red(), color.green(), color.blue(), round(a2))))
 
             if stepmode and xcur < round(x2) and int(y1) != int(y1 + m):
                 steps += 1
@@ -61,4 +60,5 @@ def vu(x1, y1, x2, y2, color = QColor(0,0,0), intensity=100, stepmode=False):
     if stepmode:
         return steps
     
+    pts.append(False)
     return pts
