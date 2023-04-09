@@ -1,11 +1,9 @@
-from PyQt5.QtGui import QColor
+from utils import get_intensity
 
-def dda(x1, y1, x2, y2, color=QColor(0, 0, 0), stepmode=False):
-    pts = []
-    steps = 0
+def dda(x1, y1, x2, y2, color=(0, 0, 0), stepmode=False):
 
-    if x2 == x1 and y2 == y1:
-        return [(x1, y1, color), False]
+    if (x2 - x1 == 0) and (y2 - y1 == 0):
+        return [[x1, y1, get_intensity(color, 255)]]
 
     dx = x2 - x1
     dy = y2 - y1
@@ -17,18 +15,27 @@ def dda(x1, y1, x2, y2, color=QColor(0, 0, 0), stepmode=False):
     dx /= length
     dy /= length
 
-    xcur = x1
-    ycur = y1
+    x = x1
+    y = y1
+
+    pts = [[x, y, get_intensity(color, 255)]]
 
     i = 1
-    while i <= length + 1:
-        if not stepmode:
-            pts.append((round(xcur), round(ycur), color))
-        elif round(xcur + dx) != round(xcur) and round(ycur + dy) != round(ycur):
-            steps += 1
+    steps = 0
 
-        xcur += dx
-        ycur += dy
+    while i <= length:
+
+        if stepmode:
+            xprev = x
+            yprev = y
+
+        x += dx
+        y += dy
+
+        if not stepmode:
+            pts.append([int(round(x)), int(round(y)), get_intensity(color, 255)])
+        elif (round(xprev) != round(x) and round(yprev) != round(y)):
+            steps += 1
 
         i += 1
 
@@ -37,3 +44,4 @@ def dda(x1, y1, x2, y2, color=QColor(0, 0, 0), stepmode=False):
     
     pts.append(False)
     return pts
+    

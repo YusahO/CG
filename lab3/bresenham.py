@@ -1,188 +1,197 @@
-from PyQt5.QtGui import QColor
 from numpy import sign
+from utils import get_intensity
 
-from utils import remap
-
-def bresenham_float(x1, y1, x2, y2, color = QColor(0,0,0), stepmode=False):
-    pts = []
-
+def bresenham_float(x1, y1, x2, y2, color=(0, 0, 0), stepmode=False):
     dx = x2 - x1
     dy = y2 - y1
 
     if dx == 0 and dy == 0:
-        return [(x1, y1, color), False]
+        return [[x1, y1, get_intensity(color, 255)], False]
+    
+    x = x1
+    y = y1
 
-    sx, sy = sign(dx), sign(dy)
+    sx = sign(dx)
+    sy = sign(dy)
 
     dx = abs(dx)
     dy = abs(dy)
 
     exchanged = False
     if dy > dx:
-        dx, dy = dy, dx
         exchanged = True
+        dx, dy = dy, dx
 
     m = dy / dx
-    error = m - .5
+    error = m - 0.5
 
-    xcur = x1
-    ycur = y1
+    xprev = x
+    yprev = y
 
-    xprev = x1
-    yprev = y1
-
+    pts = []
     steps = 0
+
     i = 0
     while i <= dx:
         if not stepmode:
-            pts.append((xcur, ycur, color))
+            pts.append([x, y, get_intensity(color, 255)])
 
         if error >= 0:
             if exchanged:
-                xcur += sx
+                x += sx
             else:
-                ycur += sy
+                y += sy
+            
             error -= 1
-
+        
         if exchanged:
-            ycur += sy
+            y += sy
         else:
-            xcur += sx
+            x += sx
+
         error += m
 
         if stepmode:
-            if xprev != xcur and yprev != ycur:
+            if xprev != x and yprev != y:
                 steps += 1
-            xprev = xcur
-            yprev = ycur
-        
+
+            xprev = x
+            yprev = y
+
         i += 1
-    
+
     if stepmode:
         return steps
     
     pts.append(False)
     return pts
 
-def bresenham_integer(x1, y1, x2, y2, color = QColor(0,0,0), stepmode=False):
-    pts = []
 
+def bresenham_integer(x1, y1, x2, y2, color=(0, 0, 0), stepmode=False):
     dx = x2 - x1
     dy = y2 - y1
 
     if dx == 0 and dy == 0:
-        return [(x1, y1, color), False]
+        return [[x1, y1, get_intensity(color, 255)], False]
+    
+    x = x1
+    y = y1
 
-    sx, sy = sign(dx), sign(dy)
+    sx = sign(dx)
+    sy = sign(dy)
 
     dx = abs(dx)
     dy = abs(dy)
 
     exchanged = False
     if dy > dx:
-        dx, dy = dy, dx
         exchanged = True
+        dx, dy = dy, dx
 
     error = 2 * dy - dx
 
-    xcur = x1
-    ycur = y1
+    xprev = x
+    yprev = y
 
-    xprev = x1
-    yprev = y1
+    pts = []
     steps = 0
 
     i = 0
     while i <= dx:
         if not stepmode:
-            pts.append((xcur, ycur, color))
+            pts.append((x, y, get_intensity(color, 255)))
 
         if error >= 0:
             if exchanged:
-                xcur += sx
+                x += sx
             else:
-                ycur += sy
+                y += sy
+            
             error -= 2 * dx
-
+        
         if exchanged:
-            ycur += sy
+            y += sy
         else:
-            xcur += sx
+            x += sx
+
         error += 2 * dy
 
         if stepmode:
-            if xprev != xcur and yprev != ycur:
+            if xprev != x and yprev != y:
                 steps += 1
-            xprev = xcur
-            yprev = ycur
+
+            xprev = x
+            yprev = y
 
         i += 1
-    
+
     if stepmode:
         return steps
     
     pts.append(False)
     return pts
 
-def bresenham_aa(x1, y1, x2, y2, color = QColor(0,0,0), intensity=100, stepmode=False):
-    pts = []
-
+def bresenham_aa(x1, y1, x2, y2, color=(0,0,0), intensity=255, stepmode=False):
     dx = x2 - x1
     dy = y2 - y1
 
     if dx == 0 and dy == 0:
-        return [(x1, y1, QColor(color.red(), color.green(), color.blue(), 255)), False]
+        return [[x1, y1, get_intensity(color, 255)], False]
+    
+    x = x1
+    y = y1
 
-    sx, sy = sign(dx), sign(dy)
+    sx = sign(dx)
+    sy = sign(dy)
 
-    dx = abs(x2 - x1)
-    dy = abs(y2 - y1)
+    dx = abs(dx)
+    dy = abs(dy)
 
     exchanged = False
     if dy > dx:
-        dx, dy = dy, dx
         exchanged = True
+        dx, dy = dy, dx
 
     m = dy / dx
-    error = .5
     w = 1 - m
+    error = 0.5
 
-    xcur = x1
-    ycur = y1
+    pts = []
 
-    xprev = x1
-    yprev = y1 
-    steps = 0
+    xprev = x
+    yprev = y
 
     i = 0
+    steps = 0
+
     while i <= dx:
         if not stepmode:
-            a = error * intensity
-            pts.append((xcur, ycur, QColor(color.red(), color.green(), color.blue(), round(remap(0, intensity, 0, 255, a)))))
+            pts.append([x, y, get_intensity(color, round(intensity * error))])
 
         if error < w:
-            if exchanged == 0:
-                xcur += sx
+            if exchanged:
+                y += sy
             else:
-                ycur += sy
+                x += sx
             error += m
-        
+            
         else:
-            xcur += sx
-            ycur += sy
+            x += sx
+            y += sy
 
             error -= w
 
         if stepmode:
-            if xprev != xcur and yprev != ycur:
+            if xprev != x and yprev != y:
                 steps += 1
-            xprev = xcur
-            yprev = ycur
-        
+
+            xprev = x
+            yprev = y
+
         i += 1
-    
+
     if stepmode:
         return steps
-
+    
     pts.append(False)
     return pts

@@ -12,7 +12,7 @@ from utils import generate_spectrum
 
 from numpy import pi, sin, cos
 
-I = 100
+I = 255
 RUNS = 30
 
 
@@ -23,9 +23,6 @@ class UI(QtWidgets.QMainWindow):
         super().__init__()
         uic.loadUi('/home/daria/Документы/CG/lab3/lab3.ui', self)
         self.colorDialog = QtWidgets.QColorDialog()
-
-        self.lineColPB.clicked.connect(self.setLineColorWithDialog)
-        self.bgColPB.clicked.connect(self.setBgColorWithDialog)
 
         self.lineColSwatch.changeColor.connect(self.colorview.changeCurColor)
         self.lineColSwatch_2.changeColor.connect(self.colorview.changeCurColor)
@@ -52,14 +49,6 @@ class UI(QtWidgets.QMainWindow):
         self.clearPB.clicked.connect(self.clearCanvas)
         self.show()
 
-    def setLineColorWithDialog(self):
-        color = self.colorDialog.getColor()
-        self.colorview.changeCurColor(color)
-
-    def setBgColorWithDialog(self):
-        color = self.colorDialog.getColor()
-        self.canvas.changeBgColor(color)
-
     def tryGetLineEditData(self, lineEdit, vmin=None, vmax=None, vdefault=0):
         try:
             v = float(lineEdit.text())
@@ -68,6 +57,7 @@ class UI(QtWidgets.QMainWindow):
             if vmax is not None:
                 v = min(vmax, v)
         except:
+            lineEdit.setText(f'{vdefault}')
             v = vdefault
         return v
 
@@ -86,29 +76,31 @@ class UI(QtWidgets.QMainWindow):
         return cx, cy, angle, length
 
     def chooseAlg(self, pts):
+        col = self.colorview.color
+        col = (col.red(), col.green(), col.blue())
         if self.ddaRB.isChecked():
             for p in pts:
                 p = list(map(round, p))
-                self.canvas.lines.append(dda(*p, self.colorview.color))
+                self.canvas.lines.append(dda(*p, col))
         elif self.brFloatRB.isChecked():
             for p in pts:
                 p = list(map(round, p))
-                self.canvas.lines.append(bresenham_float(*p, self.colorview.color))
+                self.canvas.lines.append(bresenham_float(*p, col))
         elif self.brIntRB.isChecked():
             for p in pts:
                 p = list(map(round, p))
-                self.canvas.lines.append(bresenham_integer(*p, self.colorview.color))
+                self.canvas.lines.append(bresenham_integer(*p, col))
         elif self.brAARB.isChecked():
             for p in pts:
                 p = list(map(round, p))
-                self.canvas.lines.append(bresenham_aa(*p, self.colorview.color, I))
+                self.canvas.lines.append(bresenham_aa(*p, col, I))
         elif self.vuRB.isChecked():
             for p in pts:
                 p = list(map(round, p))
-                self.canvas.lines.append(vu(*p, self.colorview.color, I))
+                self.canvas.lines.append(vu(*p, col, I))
         elif self.libRB.isChecked():
             for p in pts:
-                self.canvas.lines.append((p[:2], p[2:], self.colorview.color, True))
+                self.canvas.lines.append((p[:2], p[2:], col, True))
 
     def clearCanvas(self):
         self.canvas.lines.clear()

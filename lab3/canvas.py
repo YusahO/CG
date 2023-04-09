@@ -38,13 +38,12 @@ class Canvas(QtWidgets.QWidget):
         pen = QPen()
         for l in self.lines:
             if l[-1]:
-                pen.setColor(l[2])
+                pen.setColor(QColor(*l[2]))
                 painter.setPen(pen)
                 painter.drawLine(QPointF(*l[0]), QPointF(*l[1]))
                 continue
-            
             for p in l[:-1]:
-                pen.setColor(p[2])
+                pen.setColor(QColor(*p[2]))
                 painter.setPen(pen)
                 painter.drawPoint(QPointF(p[0], p[1]))
 
