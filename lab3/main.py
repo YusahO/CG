@@ -13,7 +13,7 @@ from utils import generate_spectrum
 from numpy import pi, sin, cos
 
 I = 255
-RUNS = 30
+RUNS = 150
 
 
 class UI(QtWidgets.QMainWindow):
@@ -46,19 +46,40 @@ class UI(QtWidgets.QMainWindow):
         self.timeCompPB.clicked.connect(self.measureTime)
         self.aliasCompPB.clicked.connect(self.measureSteps)
 
+        self.msgbox = QtWidgets.QMessageBox()
+        self.author.triggered.connect(lambda event: self.msgbox.information(
+            self, 'Об авторе', '<font size=14><b>ИУ7-41Б Шубенина Дарья</b></font>'))
+        
+        self.task.triggered.connect(lambda event: self.msgbox.information(
+            self, 'Условие', '''<font size=14><b>Алгоритмы построения отрезков.
+                                Реализовать возможность построения \
+                                отрезков методами \
+                                Брезенхема, Ву, ЦДА, \
+                                построение пучка отрезков и \
+                                сравнение времени и ступенчатости.</b></font>''')
+        )
+
         self.clearPB.clicked.connect(self.clearCanvas)
         self.show()
 
     def tryGetLineEditData(self, lineEdit, vmin=None, vmax=None, vdefault=0):
         try:
             v = float(lineEdit.text())
-            if vmin is not None:
-                v = max(vmin, v)
-            if vmax is not None:
-                v = min(vmax, v)
+            if vmin is not None and v < vmin:
+                raise Exception
+            if vmax is not None and v > vmax:
+                raise Exception
         except:
-            lineEdit.setText(f'{vdefault}')
-            v = vdefault
+            message = ''
+            if vmin is not None and vmax is not None:
+                message = f'Значение должно быть числом в промежутке [{vmin}, {vmax}]'
+            elif vmin is None and vmax is not None:
+                message = f'Значение должно быть числом <= {vmax}'
+            elif vmin is not None and vmax is None:
+                message = f'Значение должно быть числом >= {vmin}'
+
+            self.msgbox.critical(self, 'Ошибка!', '<font size=14><b>Неверный ввод!\n' + message + '</b></font>')
+            v = None
         return v
 
     def getSegmentPoints(self):
@@ -72,7 +93,7 @@ class UI(QtWidgets.QMainWindow):
         cx = self.tryGetLineEditData(self.cxLE, vmin=0)
         cy = self.tryGetLineEditData(self.cyLE, vmin=0)
         angle = self.tryGetLineEditData(self.angleLE, vmax=360)
-        length = self.tryGetLineEditData(self.lengthLE)
+        length = self.tryGetLineEditData(self.lengthLE, vmin=0)
         return cx, cy, angle, length
 
     def chooseAlg(self, pts):
@@ -108,12 +129,18 @@ class UI(QtWidgets.QMainWindow):
 
     def paintSegment(self):
         pts = self.getSegmentPoints()
+        if None in pts:
+            return
+        
         self.chooseAlg([pts])
-
         self.canvas.update()
 
     def paintSpectrum(self):
         cx, cy, angle, length = self.getSpectrumData()
+
+        if None in (cx, cy, angle, length):
+            return
+        
         pts = generate_spectrum((cx, cy), angle, length)
         self.chooseAlg(pts)
 
@@ -180,7 +207,8 @@ class UI(QtWidgets.QMainWindow):
         while a <= pi / 2:
             p = (cos(a) * length, sin(a) * length)
             for i in range(len(methods)):
-                steps[i][ia] = methods[i](0, 0, round(p[0]), round(p[1]), stepmode=True)
+                steps[i][ia] = methods[i](0, 0, round(
+                    p[0]), round(p[1]), stepmode=True)
             ia += 1
             a += da * pi / 180
 

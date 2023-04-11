@@ -6,7 +6,7 @@ def bresenham_float(x1, y1, x2, y2, color=(0, 0, 0), stepmode=False):
     dy = y2 - y1
 
     if dx == 0 and dy == 0:
-        return [[x1, y1, get_intensity(color, 255)], False]
+        return [[x1, y1, color], False]
     
     x = x1
     y = y1
@@ -34,7 +34,7 @@ def bresenham_float(x1, y1, x2, y2, color=(0, 0, 0), stepmode=False):
     i = 0
     while i <= dx:
         if not stepmode:
-            pts.append([x, y, get_intensity(color, 255)])
+            pts.append([x, y, color])
 
         if error >= 0:
             if exchanged:
@@ -67,12 +67,12 @@ def bresenham_float(x1, y1, x2, y2, color=(0, 0, 0), stepmode=False):
     return pts
 
 
-def bresenham_integer(x1, y1, x2, y2, color=(0, 0, 0), stepmode=False):
+def bresenham_integer(x1: int, y1: int, x2: int, y2: int, color=(0, 0, 0), stepmode=False):
     dx = x2 - x1
     dy = y2 - y1
 
     if dx == 0 and dy == 0:
-        return [[x1, y1, get_intensity(color, 255)], False]
+        return [[x1, y1, color], False]
     
     x = x1
     y = y1
@@ -80,8 +80,8 @@ def bresenham_integer(x1, y1, x2, y2, color=(0, 0, 0), stepmode=False):
     sx = sign(dx)
     sy = sign(dy)
 
-    dx = abs(dx)
-    dy = abs(dy)
+    dx = int(abs(dx))
+    dy = int(abs(dy))
 
     exchanged = False
     if dy > dx:
@@ -99,7 +99,7 @@ def bresenham_integer(x1, y1, x2, y2, color=(0, 0, 0), stepmode=False):
     i = 0
     while i <= dx:
         if not stepmode:
-            pts.append((x, y, get_intensity(color, 255)))
+            pts.append((x, y, color))
 
         if error >= 0:
             if exchanged:
@@ -136,7 +136,7 @@ def bresenham_aa(x1, y1, x2, y2, color=(0,0,0), intensity=255, stepmode=False):
     dy = y2 - y1
 
     if dx == 0 and dy == 0:
-        return [[x1, y1, get_intensity(color, 255)], False]
+        return [[x1, y1, color], False]
     
     x = x1
     y = y1
@@ -166,7 +166,7 @@ def bresenham_aa(x1, y1, x2, y2, color=(0,0,0), intensity=255, stepmode=False):
 
     while i <= dx:
         if not stepmode:
-            pts.append([x, y, get_intensity(color, round(intensity * error))])
+            pts.append([x, y, get_intensity(color, round(min(255, intensity * error * 2)))])
 
         if error < w:
             if exchanged:

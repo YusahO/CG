@@ -4,6 +4,7 @@ def fract(val):
     return val - int(val)
 
 def vu(x1, y1, x2, y2, color=(0,0,0), intensity=255, stepmode=False):
+    
     if x1 == x2 and y1 == y2:
         return [(x1, y1, color), False]
     
@@ -23,14 +24,14 @@ def vu(x1, y1, x2, y2, color=(0,0,0), intensity=255, stepmode=False):
             ms *= -1
             step *= -1
 
-        for ycur in range(round(y1), round(y2), step):
+        for y in range(round(y1), round(y2), step):
             a1 = round(intensity - fract(x1) * intensity)
             a2 = intensity - a1
 
-            pts.append((int(x1),     ycur, get_intensity(color, a1)))
-            pts.append((int(x1) + 1, ycur, get_intensity(color, a2)))
+            pts.append((int(x1),     y, get_intensity(color, a1)))
+            pts.append((int(x1) + 1, y, get_intensity(color, a2)))
 
-            if stepmode and ycur < round(y2) and int(x1) != int(x1 + m):
+            if stepmode and y < round(y2) and int(x1) != int(x1 + m):
                 steps += 1
                 
             x1 += m
@@ -41,14 +42,14 @@ def vu(x1, y1, x2, y2, color=(0,0,0), intensity=255, stepmode=False):
             ms *= -1
             step *= -1
 
-        for xcur in range(round(x1), round(x2), step):
+        for x in range(round(x1), round(x2), step):
             a1 = round(intensity - fract(y1) * intensity)
             a2 = intensity - a1
 
-            pts.append((xcur, int(y1),     get_intensity(color, a1)))
-            pts.append((xcur, int(y1) + 1, get_intensity(color, a2)))
+            pts.append((x, int(y1),     get_intensity(color, a1)))
+            pts.append((x, int(y1) + 1, get_intensity(color, a2)))
 
-            if stepmode and xcur < round(x2) and int(y1) != int(y1 + m):
+            if stepmode and x < round(x2) and int(y1) != int(y1 + m):
                 steps += 1
                 
             y1 += m
