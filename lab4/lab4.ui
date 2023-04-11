@@ -27,13 +27,27 @@
      </widget>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,1,0">
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,1,0">
       <property name="spacing">
        <number>0</number>
       </property>
       <property name="leftMargin">
        <number>0</number>
       </property>
+      <item>
+       <widget class="QLabel" name="label_5">
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Система координат: экранная</string>
+        </property>
+       </widget>
+      </item>
       <item>
        <widget class="QGroupBox" name="groupBox">
         <property name="sizePolicy">
@@ -734,7 +748,7 @@ font: 10pt</string>
                </font>
               </property>
               <property name="currentIndex">
-               <number>1</number>
+               <number>0</number>
               </property>
               <widget class="QWidget" name="widget">
                <layout class="QGridLayout" name="gridLayout_6">
@@ -1178,7 +1192,7 @@ font: 10pt</string>
                </font>
               </property>
               <property name="currentIndex">
-               <number>1</number>
+               <number>0</number>
               </property>
               <widget class="QWidget" name="eSingle">
                <layout class="QGridLayout" name="gridLayout_8">

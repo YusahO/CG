@@ -12,6 +12,8 @@ from bresenham import CircleBresenham, EllipseBresenham
 
 from utils import CreateCircleSpectrum, CreateEllipseSpectrum
 
+RUNS = 10
+
 class UI(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -41,7 +43,6 @@ class UI(QtWidgets.QMainWindow):
         self.cSpectStepRB.toggled.connect(lambda: self.cSpectStepLE.setEnabled(not self.cSpectStepRB.isChecked()))
         self.cSpectAmtRB.toggled.connect(lambda: self.cSpectAmtLE.setEnabled(not self.cSpectAmtRB.isChecked()))
 
-
         self.eSpectAxisStartRB.toggled.connect(lambda: self.eSpectAStartLE.setEnabled(not self.eSpectAxisStartRB.isChecked()))
         self.eSpectAxisStartRB.toggled.connect(lambda: self.eSpectBStartLE.setEnabled(not self.eSpectAxisStartRB.isChecked()))
         self.eSpectAxisEndRB.toggled.connect(lambda: self.eSpectAEndLE.setEnabled(not self.eSpectAxisEndRB.isChecked()))
@@ -54,6 +55,8 @@ class UI(QtWidgets.QMainWindow):
         self.ePaintPB.clicked.connect(self.paintEllipse)
 
         self.canvasClearPB.clicked.connect(self.clearCanvas)
+
+        self.cCmpPB.clicked.connect(self.measureTimeCircle)
 
         self.show()
 
@@ -172,6 +175,47 @@ class UI(QtWidgets.QMainWindow):
             pts = self.getEllipseData(spectrum=False)
             self.selectAlg([pts], figure='e')
         self.canvas.update()
+
+    def measureTimeCircle(self):
+        painter = QPainter()
+        methodsCircle = (
+            CircleCanonic,
+            CircleParametric,
+            CircleMidpoint,
+            CircleBresenham,
+            lambda cx, cy, R: painter.drawEllipse(QPointF(cx, cy), R, R)
+        )
+
+        cx, cy, rs, re, st, amt = self.getCircleData(spectrum=True)
+        pts = CreateCircleSpectrum(cx, cy, rs, re, st, amt)
+        times = [[0 for  _ in range(int(rs), int(re) + 1)] for _ in range(len(methodsCircle))]
+
+        for i in range(len(times)):
+            for r in range(len(times[i])):
+                for _ in range(RUNS):
+                    for p in pts:
+                        beg = time()
+                        methodsCircle[i](*p)
+                        end = time()
+                        times[i][r] += end - beg
+                times[i][r] /= RUNS
+
+        plt.figure(figsize=(10, 6))
+        plt.rcParams['font.size'] = '15'
+        plt.title(
+            f"Скорость построения спектров окружностей\nв зависимости от алгоритма")
+
+        positions = [i for i in range(len(times))]
+        methods = ["Каноническое\nуравнение", "Параметрическое\nуравнение", "Метод средней\nточки",
+                   "Алгоритм\nБрезенхема", "Библиотечная\nфункция"]
+
+        plt.xticks(positions, methods)
+        plt.ylabel("Время")
+
+        for p in positions:
+            plt.plot(p, times)
+
+        plt.show()
 
 
 app = QtWidgets.QApplication(sys.argv)
