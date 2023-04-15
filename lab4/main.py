@@ -1,16 +1,23 @@
 import sys
+import numpy as np
 import matplotlib.pyplot as plt
 from PyQt5 import uic, QtWidgets
-from PyQt5.QtCore import QPointF
-from PyQt5.QtGui import QColor, QPainter
+from PyQt5.QtGui import QPainter
 from time import time
 
-from canonic import CircleCanonic, EllipseCanonic
-from parametric import CircleParametric, EllipseParametric
-from midpoint import CircleMidpoint, EllipseMidpoint
-from bresenham import CircleBresenham, EllipseBresenham
+from canonic import CircleCanonicDraw, EllipseCanonicDraw
+from parametric import CircleParametricDraw, EllipseParametricDraw
+from midpoint import CircleMidpointDraw, EllipseMidpointDraw
+from bresenham import CircleBresenhamDraw, EllipseBresenhamDraw
+
+from canonic import CircleCanonicMeasure, EllipseCanonicMeasure
+from parametric import CircleParametricMeasure, EllipseParametricMeasure
+from midpoint import CircleMidpointMeasure, EllipseMidpointMeasure
+from bresenham import CircleBresenhamMeasure, EllipseBresenhamMeasure
 
 from utils import CreateCircleSpectrum, CreateEllipseSpectrum
+
+REPS = 200
 
 class UI(QtWidgets.QMainWindow):
     def __init__(self):
@@ -41,19 +48,13 @@ class UI(QtWidgets.QMainWindow):
         self.cSpectStepRB.toggled.connect(lambda: self.cSpectStepLE.setEnabled(not self.cSpectStepRB.isChecked()))
         self.cSpectAmtRB.toggled.connect(lambda: self.cSpectAmtLE.setEnabled(not self.cSpectAmtRB.isChecked()))
 
-
-        self.eSpectAxisStartRB.toggled.connect(lambda: self.eSpectAStartLE.setEnabled(not self.eSpectAxisStartRB.isChecked()))
-        self.eSpectAxisStartRB.toggled.connect(lambda: self.eSpectBStartLE.setEnabled(not self.eSpectAxisStartRB.isChecked()))
-        self.eSpectAxisEndRB.toggled.connect(lambda: self.eSpectAEndLE.setEnabled(not self.eSpectAxisEndRB.isChecked()))
-        self.eSpectAxisEndRB.toggled.connect(lambda: self.eSpectBEndLE.setEnabled(not self.eSpectAxisEndRB.isChecked()))
-        self.eSpectStepRB.toggled.connect(lambda: self.eSpectStepLE.setEnabled(not self.eSpectStepRB.isChecked()))
-        self.eSpectAmtRB.toggled.connect(lambda: self.eSpectAmtLE.setEnabled(not self.eSpectAmtRB.isChecked()))
-
-
         self.cPaintPB.clicked.connect(self.paintCircle)
         self.ePaintPB.clicked.connect(self.paintEllipse)
 
         self.canvasClearPB.clicked.connect(self.clearCanvas)
+
+        self.cCmpPB.clicked.connect(self.measureTimeCircle)
+        self.eCmpPB.clicked.connect(self.measureTimeEllipse)
 
         self.show()
 
@@ -78,27 +79,27 @@ class UI(QtWidgets.QMainWindow):
         if self.canonicRB.isChecked():
             for c in pts:
                 if figure == 'c':
-                    self.canvas.shapes.append(CircleCanonic(*c, color=col))
+                    self.canvas.shapes.append(CircleCanonicDraw(*c, color=col))
                 elif figure == 'e':
-                    self.canvas.shapes.append(EllipseCanonic(*c, color=col))
+                    self.canvas.shapes.append(EllipseCanonicDraw(*c, color=col))
         elif self.paramRB.isChecked():
             for c in pts:
                 if figure == 'c':
-                    self.canvas.shapes.append(CircleParametric(*c, color=col))
+                    self.canvas.shapes.append(CircleParametricDraw(*c, color=col))
                 elif figure == 'e':
-                    self.canvas.shapes.append(EllipseParametric(*c, color=col))
+                    self.canvas.shapes.append(EllipseParametricDraw(*c, color=col))
         elif self.midpointRB.isChecked():
             for c in pts:
                 if figure == 'c':
-                    self.canvas.shapes.append(CircleMidpoint(*c, color=col))
+                    self.canvas.shapes.append(CircleMidpointDraw(*c, color=col))
                 elif figure == 'e':
-                    self.canvas.shapes.append(EllipseMidpoint(*c, color=col))
+                    self.canvas.shapes.append(EllipseMidpointDraw(*c, color=col))
         elif self.bresRB.isChecked():
             for c in pts:
                 if figure == 'c':
-                    self.canvas.shapes.append(CircleBresenham(*c, color=col))
+                    self.canvas.shapes.append(CircleBresenhamDraw(*c, color=col))
                 elif figure == 'e':
-                    self.canvas.shapes.append(EllipseBresenham(*c, color=col))
+                    self.canvas.shapes.append(EllipseBresenhamDraw(*c, color=col))
         elif self.libRB.isChecked():
             for c in pts:
                 self.canvas.shapes.append((c, col, True))
@@ -125,21 +126,17 @@ class UI(QtWidgets.QMainWindow):
             cy = self.tryGetLineEditData(self.eSpectCYLE)
             astart = self.tryGetLineEditData(self.eSpectAStartLE)
             bstart = self.tryGetLineEditData(self.eSpectBStartLE)
-            aend = self.tryGetLineEditData(self.eSpectAEndLE)
-            bend = self.tryGetLineEditData(self.eSpectBEndLE)
             st = self.tryGetLineEditData(self.eSpectStepLE, T=int)
             amt = self.tryGetLineEditData(self.eSpectAmtLE, T=int)
-            return cx, cy, astart, bstart, aend, bend, st, amt
+            return cx, cy, astart, bstart, st, amt
         else:
             cx = self.tryGetLineEditData(self.exLE)
             cy = self.tryGetLineEditData(self.eyLE)
             a = self.tryGetLineEditData(self.aLE)
             b = self.tryGetLineEditData(self.bLE)
             return cx, cy, a, b
-
-    def paintCircle(self):
-        if self.cSpectrumCB.isChecked():
-            data = self.getCircleData(spectrum=True)
+    
+    def decideCircleSpectrumAllowedData(self, data: list):
             pts = []
             if self.cSpectRadStartRB.isChecked():
                 pts = CreateCircleSpectrum(*data, hidden='rstart')
@@ -149,6 +146,12 @@ class UI(QtWidgets.QMainWindow):
                 pts = CreateCircleSpectrum(*data, hidden='step')
             else:
                 pts = CreateCircleSpectrum(*data, hidden='amt')
+            return pts
+
+    def paintCircle(self):
+        if self.cSpectrumCB.isChecked():
+            data = self.getCircleData(spectrum=True)
+            pts = self.decideCircleSpectrumAllowedData(data)
             self.selectAlg(pts)
         else:
             pts = self.getCircleData(spectrum=False)
@@ -158,21 +161,90 @@ class UI(QtWidgets.QMainWindow):
     def paintEllipse(self):
         if self.eSpectrumCB.isChecked():
             data = self.getEllipseData(spectrum=True)
-            pts = []
-            if self.cSpectRadStartRB.isChecked():
-                pts = CreateEllipseSpectrum(*data, hidden='rstart')
-            elif self.cSpectRadEndRB.isChecked():
-                pts = CreateEllipseSpectrum(*data, hidden='rend')
-            elif self.cSpectStepRB.isChecked():
-                pts = CreateEllipseSpectrum(*data, hidden='step')
-            else:
-                pts = CreateEllipseSpectrum(*data, hidden='amt')
+            pts = CreateEllipseSpectrum(*data)
             self.selectAlg(pts, figure='e')
         else:
             pts = self.getEllipseData(spectrum=False)
             self.selectAlg([pts], figure='e')
         self.canvas.update()
 
+    def measureTimeCircle(self):
+        data = self.getCircleData(spectrum=True)
+        pts = self.decideCircleSpectrumAllowedData(data)
+
+        painter = QPainter()
+        methods = (
+            CircleCanonicMeasure,
+            CircleParametricMeasure,
+            CircleMidpointMeasure,
+            CircleBresenhamMeasure,
+            lambda R: painter.drawEllipse(0, 0, R, R)
+        )
+        times = [[0 for _ in pts] for _ in range(len(methods))]
+        radiuses = [round(r[-1]) for r in pts]
+
+        for m in range(len(times)):
+            for rad in range(len(times[m])):
+                for _ in range(REPS):
+                    beg = time()
+                    methods[m](radiuses[rad])
+                    end = time()
+                    times[m][rad] += end - beg
+                times[m][rad] /= REPS
+
+        plt.figure(figsize=(10, 6))
+        plt.rcParams['font.size'] = '15'
+        plt.title(f"Скорость построения окружностей в зависимости от радиуса\n(шаг изменения радиуса = {radiuses[1] - radiuses[0]})")
+
+        methods = ["Каноническое\nуравнение", "Параметрическое\nуравнение", "Алгоритм\nсредней точки",
+                   "Алгоритм\nБрезенхема", "Библиотечная\nфункция"]
+        plt.ylabel("Время")
+
+        for t in range(len(times)):
+            plt.plot(radiuses, times[t], label=methods[t])
+
+        plt.legend()
+        plt.show()
+
+    def measureTimeEllipse(self):
+        data = self.getEllipseData(spectrum=True)
+        pts = CreateEllipseSpectrum(*data)
+
+        painter = QPainter()
+        methods = (
+            EllipseCanonicMeasure,
+            EllipseParametricMeasure,
+            EllipseMidpointMeasure,
+            EllipseBresenhamMeasure,
+            lambda a, b: painter.drawEllipse(0, 0, a, b)
+        )
+        times = [[0 for _ in pts] for _ in range(len(methods))]
+        semiaxes = np.array([tuple(map(round, (a[-2:]))) for a in pts])
+
+        for m in range(len(times)):
+            for a in range(len(times[m])):
+                for _ in range(REPS):
+                    beg = time()
+                    methods[m](*semiaxes[a])
+                    end = time()
+                    times[m][a] += end - beg
+                times[m][a] /= REPS
+
+        plt.figure(figsize=(10, 6))
+        plt.rcParams['font.size'] = '15'
+        print(semiaxes)
+        plt.title(f"Скорость построения эллипсов в зависимости от размеров полуосей\n(шаг изменения полуосей = {semiaxes[1, 0] - semiaxes[0, 0]})")
+
+        methods = ["Каноническое\nуравнение", "Параметрическое\nуравнение", "Алгоритм\nсредней точки",
+                   "Алгоритм\nБрезенхема", "Библиотечная\nфункция"]
+
+        plt.ylabel("Время")
+
+        for t in range(len(times)):
+            plt.plot(semiaxes[:, 0], times[t], label=methods[t])
+
+        plt.legend()
+        plt.show()
 
 app = QtWidgets.QApplication(sys.argv)
 window = UI()

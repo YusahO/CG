@@ -35,48 +35,30 @@ def CreateCircleSpectrum(cx, cy, rs, re, st, amt, hidden='amt'):
     if hidden == 'amt':
         _amt = int((re - rs) / st)
         for _ in range(_amt + 1):
-            pts.append((cx, cy, rs + st))
+            pts.append((cx, cy, rs))
             rs += st
     elif hidden == 'step':
         _st = int((re - rs) / amt)
         for _ in range(amt):
-            pts.append((cx, cy, rs + _st))
+            pts.append((cx, cy, rs))
             rs += _st
     elif hidden == 'rend':
         for _ in range(amt):
-            pts.append((cx, cy, rs + st))
+            pts.append((cx, cy, rs))
             rs += st
     elif hidden == 'rstart':
         _rs = re - st * amt
         for _ in range(amt):
-            pts.append((cx, cy, _rs + st))
+            pts.append((cx, cy, _rs))
             _rs += st
     
     return pts
 
-def CreateEllipseSpectrum(cx, cy, astart, bstart, aend, bend, st, amt, hidden='amt'):
+def CreateEllipseSpectrum(cx, cy, astart, bstart, st, amt):
     pts = []
-    if hidden == 'amt':
-        _amt = int((aend - astart) / st)
-        for _ in range(_amt + 1):
-            pts.append((cx, cy, astart + st, bstart + st))
-            astart += st
-            bstart += st
-    elif hidden == 'step':
-        _st = int((aend - astart) / st)
-        for _ in range(amt):
-            pts.append((cx, cy, astart + _st, bstart + _st))
-            astart += _st
-            bstart += _st
-    elif hidden == 'rend':
-        for _ in range(amt):
-            pts.append((cx, cy, astart + st, bstart + st))
-            rs += st
-    elif hidden == 'rstart':
-        _astart = aend - st * amt
-        _bstart = bend - st * amt
-        for _ in range(amt):
-            pts.append((cx, cy, _astart + st, _bstart + st))
-            rs += st
-    
+    for _ in range(amt):
+        pts.append((cx, cy, astart + st, bstart + st))
+        astart += st
+        bstart += st
+
     return pts

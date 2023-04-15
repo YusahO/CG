@@ -20,7 +20,6 @@
       <property name="font">
        <font>
         <pointsize>14</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -51,7 +50,6 @@
         <property name="font">
          <font>
           <pointsize>14</pointsize>
-          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -64,7 +62,6 @@
            <property name="font">
             <font>
              <pointsize>14</pointsize>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -78,7 +75,6 @@
            <property name="font">
             <font>
              <pointsize>14</pointsize>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -95,7 +91,6 @@
            <property name="font">
             <font>
              <pointsize>14</pointsize>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -109,7 +104,6 @@
            <property name="font">
             <font>
              <pointsize>14</pointsize>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -123,12 +117,11 @@
            <property name="font">
             <font>
              <pointsize>14</pointsize>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
            <property name="text">
-            <string>Метод средней точки</string>
+            <string>Алгоритм средней точки</string>
            </property>
           </widget>
          </item>
@@ -152,7 +145,6 @@
         <property name="font">
          <font>
           <pointsize>14</pointsize>
-          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -167,7 +159,6 @@
              <property name="font">
               <font>
                <pointsize>14</pointsize>
-               <weight>75</weight>
                <bold>true</bold>
               </font>
              </property>
@@ -187,7 +178,6 @@
              <property name="font">
               <font>
                <pointsize>14</pointsize>
-               <weight>75</weight>
                <bold>true</bold>
               </font>
              </property>
@@ -207,7 +197,6 @@
              <property name="font">
               <font>
                <pointsize>10</pointsize>
-               <weight>50</weight>
                <italic>false</italic>
                <bold>false</bold>
               </font>
@@ -226,7 +215,6 @@ font: 10pt</string>
              <property name="font">
               <font>
                <pointsize>14</pointsize>
-               <weight>75</weight>
                <bold>true</bold>
               </font>
              </property>
@@ -248,7 +236,6 @@ font: 10pt</string>
            <property name="font">
             <font>
              <pointsize>14</pointsize>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -262,7 +249,6 @@ font: 10pt</string>
            <property name="font">
             <font>
              <pointsize>14</pointsize>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -276,7 +262,6 @@ font: 10pt</string>
            <property name="font">
             <font>
              <pointsize>14</pointsize>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -298,7 +283,6 @@ font: 10pt</string>
              <property name="font">
               <font>
                <pointsize>10</pointsize>
-               <weight>50</weight>
                <italic>false</italic>
                <bold>false</bold>
               </font>
@@ -323,7 +307,6 @@ font: 10pt</string>
              <property name="font">
               <font>
                <pointsize>10</pointsize>
-               <weight>50</weight>
                <italic>false</italic>
                <bold>false</bold>
               </font>
@@ -348,7 +331,6 @@ font: 10pt</string>
              <property name="font">
               <font>
                <pointsize>10</pointsize>
-               <weight>50</weight>
                <italic>false</italic>
                <bold>false</bold>
               </font>
@@ -373,7 +355,6 @@ font: 10pt</string>
              <property name="font">
               <font>
                <pointsize>10</pointsize>
-               <weight>50</weight>
                <italic>false</italic>
                <bold>false</bold>
               </font>
@@ -398,7 +379,6 @@ font: 10pt</string>
              <property name="font">
               <font>
                <pointsize>10</pointsize>
-               <weight>50</weight>
                <italic>false</italic>
                <bold>false</bold>
               </font>
@@ -423,7 +403,6 @@ font: 10pt</string>
              <property name="font">
               <font>
                <pointsize>10</pointsize>
-               <weight>50</weight>
                <italic>false</italic>
                <bold>false</bold>
               </font>
@@ -448,7 +427,6 @@ font: 10pt</string>
              <property name="font">
               <font>
                <pointsize>10</pointsize>
-               <weight>50</weight>
                <italic>false</italic>
                <bold>false</bold>
               </font>
@@ -477,7 +455,6 @@ font: 10pt</string>
              <property name="font">
               <font>
                <pointsize>10</pointsize>
-               <weight>50</weight>
                <italic>false</italic>
                <bold>false</bold>
               </font>
@@ -502,7 +479,6 @@ font: 10pt</string>
              <property name="font">
               <font>
                <pointsize>10</pointsize>
-               <weight>50</weight>
                <italic>false</italic>
                <bold>false</bold>
               </font>
@@ -527,7 +503,6 @@ font: 10pt</string>
              <property name="font">
               <font>
                <pointsize>10</pointsize>
-               <weight>50</weight>
                <italic>false</italic>
                <bold>false</bold>
               </font>
@@ -552,7 +527,6 @@ font: 10pt</string>
              <property name="font">
               <font>
                <pointsize>10</pointsize>
-               <weight>50</weight>
                <italic>false</italic>
                <bold>false</bold>
               </font>
@@ -577,7 +551,6 @@ font: 10pt</string>
              <property name="font">
               <font>
                <pointsize>10</pointsize>
-               <weight>50</weight>
                <italic>false</italic>
                <bold>false</bold>
               </font>
@@ -602,7 +575,6 @@ font: 10pt</string>
              <property name="font">
               <font>
                <pointsize>10</pointsize>
-               <weight>50</weight>
                <italic>false</italic>
                <bold>false</bold>
               </font>
@@ -627,7 +599,6 @@ font: 10pt</string>
              <property name="font">
               <font>
                <pointsize>10</pointsize>
-               <weight>50</weight>
                <italic>false</italic>
                <bold>false</bold>
               </font>
@@ -663,7 +634,6 @@ font: 10pt</string>
         <property name="font">
          <font>
           <pointsize>14</pointsize>
-          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -676,7 +646,6 @@ font: 10pt</string>
            <property name="font">
             <font>
              <pointsize>14</pointsize>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -689,7 +658,6 @@ font: 10pt</string>
               <property name="font">
                <font>
                 <pointsize>14</pointsize>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -709,7 +677,6 @@ font: 10pt</string>
               <property name="font">
                <font>
                 <pointsize>14</pointsize>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -729,12 +696,11 @@ font: 10pt</string>
               <property name="font">
                <font>
                 <pointsize>14</pointsize>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
               <property name="currentIndex">
-               <number>1</number>
+               <number>0</number>
               </property>
               <widget class="QWidget" name="widget">
                <layout class="QGridLayout" name="gridLayout_6">
@@ -743,7 +709,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -763,7 +728,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -777,7 +741,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -791,7 +754,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -811,7 +773,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -831,7 +792,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -855,7 +815,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -869,7 +828,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -886,7 +844,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -906,7 +863,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -926,7 +882,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -940,7 +895,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -960,7 +914,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -974,7 +927,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -994,7 +946,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1011,7 +962,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1028,7 +978,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1042,7 +991,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1056,7 +1004,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1073,7 +1020,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1093,7 +1039,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1120,7 +1065,6 @@ font: 10pt</string>
            <property name="font">
             <font>
              <pointsize>14</pointsize>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -1139,7 +1083,6 @@ font: 10pt</string>
               <property name="font">
                <font>
                 <pointsize>14</pointsize>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1153,7 +1096,6 @@ font: 10pt</string>
               <property name="font">
                <font>
                 <pointsize>14</pointsize>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1173,12 +1115,11 @@ font: 10pt</string>
               <property name="font">
                <font>
                 <pointsize>14</pointsize>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
               <property name="currentIndex">
-               <number>1</number>
+               <number>0</number>
               </property>
               <widget class="QWidget" name="eSingle">
                <layout class="QGridLayout" name="gridLayout_8">
@@ -1187,7 +1128,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1201,7 +1141,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1221,7 +1160,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1241,7 +1179,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1255,7 +1192,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1275,7 +1211,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1295,7 +1230,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1314,12 +1248,43 @@ font: 10pt</string>
               </widget>
               <widget class="QWidget" name="eSpectrum">
                <layout class="QGridLayout" name="gridLayout_9">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_8">
+                  <property name="font">
+                   <font>
+                    <pointsize>14</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Центр</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1" colspan="2">
+                 <widget class="QLineEdit" name="eSpectAmtLE">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>14</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>20</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
                 <item row="1" column="1">
                  <widget class="QLineEdit" name="eSpectAStartLE">
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1334,32 +1299,11 @@ font: 10pt</string>
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="2">
-                 <widget class="QLineEdit" name="eSpectBStartLE">
-                  <property name="font">
-                   <font>
-                    <pointsize>14</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>40</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                  <property name="placeholderText">
-                   <string>b</string>
-                  </property>
-                 </widget>
-                </item>
                 <item row="0" column="2">
                  <widget class="QLineEdit" name="eSpectCYLE">
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1374,74 +1318,11 @@ font: 10pt</string>
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="0">
-                 <widget class="QLabel" name="label_18">
-                  <property name="font">
-                   <font>
-                    <pointsize>14</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Количество</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="1">
-                 <widget class="QLineEdit" name="eSpectAEndLE">
-                  <property name="font">
-                   <font>
-                    <pointsize>14</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>400</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                  <property name="placeholderText">
-                   <string>a</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="label_9">
-                  <property name="font">
-                   <font>
-                    <pointsize>14</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Полуоси (нач.)</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="label_15">
-                  <property name="font">
-                   <font>
-                    <pointsize>14</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Полуоси (кон.)</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="1" colspan="2">
+                <item row="2" column="1" colspan="2">
                  <widget class="QLineEdit" name="eSpectStepLE">
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1458,7 +1339,6 @@ font: 10pt</string>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
@@ -1473,68 +1353,55 @@ font: 10pt</string>
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="1" colspan="2">
-                 <widget class="QLineEdit" name="eSpectAmtLE">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_16">
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
                   <property name="text">
-                   <string>20</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
+                   <string>Шаг</string>
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="3">
-                 <widget class="QRadioButton" name="eSpectAxisEndRB">
+                <item row="3" column="0">
+                 <widget class="QLabel" name="label_18">
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
-                  <property name="toolTip">
-                   <string>Скрыть</string>
-                  </property>
                   <property name="text">
-                   <string/>
+                   <string>Количество</string>
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="0">
-                 <widget class="QLabel" name="label_8">
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_9">
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
                   <property name="text">
-                   <string>Центр</string>
+                   <string>Полуоси (нач.)</string>
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="2">
-                 <widget class="QLineEdit" name="eSpectBEndLE">
+                <item row="1" column="2">
+                 <widget class="QLineEdit" name="eSpectBStartLE">
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
-                    <weight>75</weight>
                     <bold>true</bold>
                    </font>
                   </property>
                   <property name="text">
-                   <string>300</string>
+                   <string>40</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignCenter</set>
@@ -1544,73 +1411,18 @@ font: 10pt</string>
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="0">
-                 <widget class="QLabel" name="label_16">
-                  <property name="font">
-                   <font>
-                    <pointsize>14</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
+                <item row="4" column="0" colspan="3">
+                 <spacer name="verticalSpacer_3">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
                   </property>
-                  <property name="text">
-                   <string>Шаг</string>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
                   </property>
-                 </widget>
-                </item>
-                <item row="1" column="3">
-                 <widget class="QRadioButton" name="eSpectAxisStartRB">
-                  <property name="font">
-                   <font>
-                    <pointsize>14</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="toolTip">
-                   <string>Скрыть</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="3">
-                 <widget class="QRadioButton" name="eSpectStepRB">
-                  <property name="font">
-                   <font>
-                    <pointsize>14</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="toolTip">
-                   <string>Скрыть</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="3">
-                 <widget class="QRadioButton" name="eSpectAmtRB">
-                  <property name="font">
-                   <font>
-                    <pointsize>14</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="toolTip">
-                   <string>Скрыть</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="checked">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
+                 </spacer>
                 </item>
                </layout>
               </widget>
@@ -1639,7 +1451,6 @@ font: 10pt</string>
         <property name="font">
          <font>
           <pointsize>14</pointsize>
-          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -1652,7 +1463,6 @@ font: 10pt</string>
            <property name="font">
             <font>
              <pointsize>14</pointsize>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -1672,7 +1482,6 @@ font: 10pt</string>
            <property name="font">
             <font>
              <pointsize>14</pointsize>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -1692,7 +1501,6 @@ font: 10pt</string>
            <property name="font">
             <font>
              <pointsize>14</pointsize>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -1712,7 +1520,6 @@ font: 10pt</string>
            <property name="font">
             <font>
              <pointsize>14</pointsize>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -1734,13 +1541,12 @@ font: 10pt</string>
      <x>0</x>
      <y>0</y>
      <width>1376</width>
-     <height>36</height>
+     <height>29</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <pointsize>13</pointsize>
-     <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
@@ -1748,7 +1554,6 @@ font: 10pt</string>
     <property name="font">
      <font>
       <pointsize>13</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
