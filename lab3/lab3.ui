@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1303</width>
-    <height>1069</height>
+    <height>971</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1068,16 +1068,29 @@
    </property>
    <widget class="QMenu" name="menu">
     <property name="title">
-     <string>Об авторе</string>
+     <string>Справка</string>
     </property>
-    <addaction name="action_7_41"/>
+    <addaction name="author"/>
+    <addaction name="task"/>
    </widget>
    <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="action_7_41">
+  <action name="author">
    <property name="text">
-    <string>ИУ7-41Б Шубенина Дарья</string>
+    <string>Об авторе</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>15</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+  </action>
+  <action name="task">
+   <property name="text">
+    <string>Условие</string>
    </property>
    <property name="font">
     <font>
