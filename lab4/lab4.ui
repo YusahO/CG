@@ -38,7 +38,6 @@
         <property name="font">
          <font>
           <pointsize>14</pointsize>
-          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -1376,7 +1375,7 @@ font: 10pt</string>
                    </font>
                   </property>
                   <property name="text">
-                   <string>Шаг</string>
+                   <string>Шаг (по гориз.)</string>
                   </property>
                  </widget>
                 </item>
@@ -1402,7 +1401,7 @@ font: 10pt</string>
                    </font>
                   </property>
                   <property name="text">
-                   <string>Полуоси (нач.)</string>
+                   <string>Полуоси</string>
                   </property>
                  </widget>
                 </item>

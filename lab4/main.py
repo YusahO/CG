@@ -56,6 +56,8 @@ class UI(QtWidgets.QMainWindow):
         self.cCmpPB.clicked.connect(self.measureTimeCircle)
         self.eCmpPB.clicked.connect(self.measureTimeEllipse)
 
+        self.msgbox = QtWidgets.QMessageBox(self)
+
         self.show()
 
     def clearCanvas(self):
@@ -66,12 +68,21 @@ class UI(QtWidgets.QMainWindow):
     def tryGetLineEditData(self, lineEdit, T=float, vmin=None, vmax=None, vdefault=0):
         try:
             v = T(lineEdit.text())
-            if vmin is not None:
-                v = max(vmin, v)
-            if vmax is not None:
-                v = min(vmax, v)
+            if vmin is not None and v < vmin:
+                raise Exception
+            if vmax is not None and v > vmax:
+                raise Exception
         except:
-            v = vdefault
+            message = ''
+            if vmin is not None and vmax is not None:
+                message = f'Значение должно быть числом в промежутке [{vmin}, {vmax}]'
+            elif vmin is None and vmax is not None:
+                message = f'Значение должно быть числом <= {vmax}'
+            elif vmin is not None and vmax is None:
+                message = f'Значение должно быть числом >= {vmin}'
+
+            self.msgbox.critical(self, 'Ошибка!', '<font size=14><b>Неверный ввод!\n' + message + '</b></font>')
+            v = None
         return v
 
     def selectAlg(self, pts, figure='c'):
@@ -107,33 +118,33 @@ class UI(QtWidgets.QMainWindow):
 
     def getCircleData(self, spectrum=False):
         if spectrum:
-            cx = self.tryGetLineEditData(self.cSpectCXLE)
-            cy = self.tryGetLineEditData(self.cSpectCYLE)
-            rs = self.tryGetLineEditData(self.cSpectRadStartLE)
-            re = self.tryGetLineEditData(self.cSpectRadEndLE)
-            st = self.tryGetLineEditData(self.cSpectStepLE, T=int)
-            amt = self.tryGetLineEditData(self.cSpectAmtLE, T=int)
+            cx = self.tryGetLineEditData(self.cSpectCXLE, vmin=0)
+            cy = self.tryGetLineEditData(self.cSpectCYLE, vmin=0)
+            rs = self.tryGetLineEditData(self.cSpectRadStartLE, vmin=0)
+            re = self.tryGetLineEditData(self.cSpectRadEndLE, vmin=0)
+            st = self.tryGetLineEditData(self.cSpectStepLE, T=int, vmin=1)
+            amt = self.tryGetLineEditData(self.cSpectAmtLE, T=int, vmin=1)
             return cx, cy, rs, re, st, amt
         else:
-            cx = self.tryGetLineEditData(self.cxLE)
-            cy = self.tryGetLineEditData(self.cyLE)
-            r = self.tryGetLineEditData(self.rLE)
+            cx = self.tryGetLineEditData(self.cxLE, vmin=0)
+            cy = self.tryGetLineEditData(self.cyLE, vmin=0)
+            r = self.tryGetLineEditData(self.rLE, vmin=0)
             return cx, cy, r
 
     def getEllipseData(self, spectrum=False):
         if spectrum:
-            cx = self.tryGetLineEditData(self.eSpectCXLE)
-            cy = self.tryGetLineEditData(self.eSpectCYLE)
-            astart = self.tryGetLineEditData(self.eSpectAStartLE)
-            bstart = self.tryGetLineEditData(self.eSpectBStartLE)
-            st = self.tryGetLineEditData(self.eSpectStepLE, T=int)
-            amt = self.tryGetLineEditData(self.eSpectAmtLE, T=int)
+            cx = self.tryGetLineEditData(self.eSpectCXLE, vmin=0)
+            cy = self.tryGetLineEditData(self.eSpectCYLE, vmin=0)
+            astart = self.tryGetLineEditData(self.eSpectAStartLE, vmin=0)
+            bstart = self.tryGetLineEditData(self.eSpectBStartLE, vmin=0)
+            st = self.tryGetLineEditData(self.eSpectStepLE, T=int, vmin=1)
+            amt = self.tryGetLineEditData(self.eSpectAmtLE, T=int, vmin=1)
             return cx, cy, astart, bstart, st, amt
         else:
-            cx = self.tryGetLineEditData(self.exLE)
-            cy = self.tryGetLineEditData(self.eyLE)
-            a = self.tryGetLineEditData(self.aLE)
-            b = self.tryGetLineEditData(self.bLE)
+            cx = self.tryGetLineEditData(self.exLE, vmin=0)
+            cy = self.tryGetLineEditData(self.eyLE, vmin=0)
+            a = self.tryGetLineEditData(self.aLE, vmin=0)
+            b = self.tryGetLineEditData(self.bLE, vmin=0)
             return cx, cy, a, b
     
     def decideCircleSpectrumAllowedData(self, data: list):
@@ -151,25 +162,45 @@ class UI(QtWidgets.QMainWindow):
     def paintCircle(self):
         if self.cSpectrumCB.isChecked():
             data = self.getCircleData(spectrum=True)
+
+            if None in data:
+                return
+            
             pts = self.decideCircleSpectrumAllowedData(data)
             self.selectAlg(pts)
         else:
             pts = self.getCircleData(spectrum=False)
+
+            if None in pts:
+                return
+            
             self.selectAlg([pts])
         self.canvas.update()
 
     def paintEllipse(self):
         if self.eSpectrumCB.isChecked():
             data = self.getEllipseData(spectrum=True)
+
+            if None in data:
+                return
+            
             pts = CreateEllipseSpectrum(*data)
             self.selectAlg(pts, figure='e')
         else:
             pts = self.getEllipseData(spectrum=False)
+
+            if None in pts:
+                return
+
             self.selectAlg([pts], figure='e')
         self.canvas.update()
 
     def measureTimeCircle(self):
         data = self.getCircleData(spectrum=True)
+
+        if None in data:
+            return
+
         pts = self.decideCircleSpectrumAllowedData(data)
 
         painter = QPainter()
@@ -208,6 +239,10 @@ class UI(QtWidgets.QMainWindow):
 
     def measureTimeEllipse(self):
         data = self.getEllipseData(spectrum=True)
+
+        if None in data:
+            return
+
         pts = CreateEllipseSpectrum(*data)
 
         painter = QPainter()
