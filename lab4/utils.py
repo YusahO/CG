@@ -54,11 +54,19 @@ def CreateCircleSpectrum(cx, cy, rs, re, st, amt, hidden='amt'):
     
     return pts
 
-def CreateEllipseSpectrum(cx, cy, astart, bstart, st, amt):
+def CreateEllipseSpectrum(cx, cy, astart, bstart, sta, stb, amt, hidden='stepa'):
     pts = []
-    for _ in range(amt):
-        pts.append((cx, cy, astart + st, bstart + st))
-        astart += st
-        bstart += st
+    if hidden == 'stepa':
+        for _ in range(amt):
+            _sta = astart / bstart * stb
+            pts.append((cx, cy, astart + _sta, bstart + stb))
+            astart += _sta
+            bstart += stb
+    elif hidden == 'stepb':
+        for _ in range(amt):
+            _stb = bstart / astart * sta 
+            pts.append((cx, cy, astart + sta, bstart + _stb))
+            astart += sta
+            bstart += _stb
 
     return pts

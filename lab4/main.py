@@ -18,19 +18,28 @@ from bresenham import CircleBresenhamMeasure, EllipseBresenhamMeasure
 from utils import CreateCircleSpectrum, CreateEllipseSpectrum
 
 REPS = 200
+STEP = 10
+AMT = 100
 
 class UI(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('/home/daria/Документы/CG/lab4/lab4.ui', self)
 
-        self.lineColorSwatch_1.changeColor.connect(self.colorview.changeCurColor)
-        self.lineColorSwatch_2.changeColor.connect(self.colorview.changeCurColor)
-        self.lineColorSwatch_3.changeColor.connect(self.colorview.changeCurColor)
-        self.lineColorSwatch_4.changeColor.connect(self.colorview.changeCurColor)
-        self.lineColorSwatch_5.changeColor.connect(self.colorview.changeCurColor)
-        self.lineColorSwatch_6.changeColor.connect(self.colorview.changeCurColor)
-        self.lineColorSwatch_7.changeColor.connect(self.colorview.changeCurColor)
+        self.lineColorSwatch_1.changeColor.connect(
+            self.colorview.changeCurColor)
+        self.lineColorSwatch_2.changeColor.connect(
+            self.colorview.changeCurColor)
+        self.lineColorSwatch_3.changeColor.connect(
+            self.colorview.changeCurColor)
+        self.lineColorSwatch_4.changeColor.connect(
+            self.colorview.changeCurColor)
+        self.lineColorSwatch_5.changeColor.connect(
+            self.colorview.changeCurColor)
+        self.lineColorSwatch_6.changeColor.connect(
+            self.colorview.changeCurColor)
+        self.lineColorSwatch_7.changeColor.connect(
+            self.colorview.changeCurColor)
 
         self.bgColorSwatch_1.changeColor.connect(self.canvas.changeBgColor)
         self.bgColorSwatch_2.changeColor.connect(self.canvas.changeBgColor)
@@ -40,13 +49,24 @@ class UI(QtWidgets.QMainWindow):
         self.bgColorSwatch_6.changeColor.connect(self.canvas.changeBgColor)
         self.bgColorSwatch_7.changeColor.connect(self.canvas.changeBgColor)
 
-        self.cSpectrumCB.stateChanged.connect(lambda: self.circleSW.setCurrentIndex(self.cSpectrumCB.isChecked()))
-        self.eSpectrumCB.stateChanged.connect(lambda: self.ellipseSW.setCurrentIndex(self.eSpectrumCB.isChecked()))
+        self.cSpectrumCB.stateChanged.connect(
+            lambda: self.circleSW.setCurrentIndex(self.cSpectrumCB.isChecked()))
+        self.eSpectrumCB.stateChanged.connect(
+            lambda: self.ellipseSW.setCurrentIndex(self.eSpectrumCB.isChecked()))
 
-        self.cSpectRadStartRB.toggled.connect(lambda: self.cSpectRadStartLE.setEnabled(not self.cSpectRadStartRB.isChecked()))
-        self.cSpectRadEndRB.toggled.connect(lambda: self.cSpectRadEndLE.setEnabled(not self.cSpectRadEndRB.isChecked()))
-        self.cSpectStepRB.toggled.connect(lambda: self.cSpectStepLE.setEnabled(not self.cSpectStepRB.isChecked()))
-        self.cSpectAmtRB.toggled.connect(lambda: self.cSpectAmtLE.setEnabled(not self.cSpectAmtRB.isChecked()))
+        self.cSpectRadStartRB.toggled.connect(
+            lambda: self.cSpectRadStartLE.setEnabled(not self.cSpectRadStartRB.isChecked()))
+        self.cSpectRadEndRB.toggled.connect(
+            lambda: self.cSpectRadEndLE.setEnabled(not self.cSpectRadEndRB.isChecked()))
+        self.cSpectStepRB.toggled.connect(
+            lambda: self.cSpectStepLE.setEnabled(not self.cSpectStepRB.isChecked()))
+        self.cSpectAmtRB.toggled.connect(
+            lambda: self.cSpectAmtLE.setEnabled(not self.cSpectAmtRB.isChecked()))
+
+        self.eXSpectStepRB.toggled.connect(
+            lambda: self.eXSpectStepLE.setEnabled(not self.eXSpectStepRB.isChecked()))
+        self.eYSpectStepRB.toggled.connect(
+            lambda: self.eYSpectStepLE.setEnabled(not self.eYSpectStepRB.isChecked()))
 
         self.cPaintPB.clicked.connect(self.paintCircle)
         self.ePaintPB.clicked.connect(self.paintEllipse)
@@ -81,7 +101,8 @@ class UI(QtWidgets.QMainWindow):
             elif vmin is not None and vmax is None:
                 message = f'Значение должно быть числом >= {vmin}'
 
-            self.msgbox.critical(self, 'Ошибка!', '<font size=14><b>Неверный ввод!\n' + message + '</b></font>')
+            self.msgbox.critical(
+                self, 'Ошибка!', '<font size=14><b>Неверный ввод!\n' + message + '</b></font>')
             v = None
         return v
 
@@ -92,29 +113,35 @@ class UI(QtWidgets.QMainWindow):
                 if figure == 'c':
                     self.canvas.shapes.append(CircleCanonicDraw(*c, color=col))
                 elif figure == 'e':
-                    self.canvas.shapes.append(EllipseCanonicDraw(*c, color=col))
+                    self.canvas.shapes.append(
+                        EllipseCanonicDraw(*c, color=col))
         elif self.paramRB.isChecked():
             for c in pts:
                 if figure == 'c':
-                    self.canvas.shapes.append(CircleParametricDraw(*c, color=col))
+                    self.canvas.shapes.append(
+                        CircleParametricDraw(*c, color=col))
                 elif figure == 'e':
-                    self.canvas.shapes.append(EllipseParametricDraw(*c, color=col))
+                    self.canvas.shapes.append(
+                        EllipseParametricDraw(*c, color=col))
         elif self.midpointRB.isChecked():
             for c in pts:
                 if figure == 'c':
-                    self.canvas.shapes.append(CircleMidpointDraw(*c, color=col))
+                    self.canvas.shapes.append(
+                        CircleMidpointDraw(*c, color=col))
                 elif figure == 'e':
-                    self.canvas.shapes.append(EllipseMidpointDraw(*c, color=col))
+                    self.canvas.shapes.append(
+                        EllipseMidpointDraw(*c, color=col))
         elif self.bresRB.isChecked():
             for c in pts:
                 if figure == 'c':
-                    self.canvas.shapes.append(CircleBresenhamDraw(*c, color=col))
+                    self.canvas.shapes.append(
+                        CircleBresenhamDraw(*c, color=col))
                 elif figure == 'e':
-                    self.canvas.shapes.append(EllipseBresenhamDraw(*c, color=col))
+                    self.canvas.shapes.append(
+                        EllipseBresenhamDraw(*c, color=col))
         elif self.libRB.isChecked():
             for c in pts:
                 self.canvas.shapes.append((c, col, True))
-
 
     def getCircleData(self, spectrum=False):
         if spectrum:
@@ -137,54 +164,55 @@ class UI(QtWidgets.QMainWindow):
             cy = self.tryGetLineEditData(self.eSpectCYLE, vmin=0)
             astart = self.tryGetLineEditData(self.eSpectAStartLE, vmin=0)
             bstart = self.tryGetLineEditData(self.eSpectBStartLE, vmin=0)
-            st = self.tryGetLineEditData(self.eSpectStepLE, T=int, vmin=1)
+            sta = self.tryGetLineEditData(self.eXSpectStepLE, T=int, vmin=1)
+            stb = self.tryGetLineEditData(self.eYSpectStepLE, T=int, vmin=1)
             amt = self.tryGetLineEditData(self.eSpectAmtLE, T=int, vmin=1)
-            return cx, cy, astart, bstart, st, amt
+            return cx, cy, astart, bstart, sta, stb, amt
         else:
             cx = self.tryGetLineEditData(self.exLE, vmin=0)
             cy = self.tryGetLineEditData(self.eyLE, vmin=0)
             a = self.tryGetLineEditData(self.aLE, vmin=0)
             b = self.tryGetLineEditData(self.bLE, vmin=0)
             return cx, cy, a, b
-    
+
     def decideCircleSpectrumAllowedData(self, data: list):
-            pts = []
-            if self.cSpectRadStartRB.isChecked():
-                pts = CreateCircleSpectrum(*data, hidden='rstart')
-            elif self.cSpectRadEndRB.isChecked():
-                pts = CreateCircleSpectrum(*data, hidden='rend')
-            elif self.cSpectStepRB.isChecked():
-                pts = CreateCircleSpectrum(*data, hidden='step')
-            else:
-                pts = CreateCircleSpectrum(*data, hidden='amt')
-            return pts
+        pts = []
+        if self.cSpectRadStartRB.isChecked():
+            pts = CreateCircleSpectrum(*data, hidden='rstart')
+        elif self.cSpectRadEndRB.isChecked():
+            pts = CreateCircleSpectrum(*data, hidden='rend')
+        elif self.cSpectStepRB.isChecked():
+            pts = CreateCircleSpectrum(*data, hidden='step')
+        else:
+            pts = CreateCircleSpectrum(*data, hidden='amt')
+        return pts
+
+    def decideEllipseSpectrumAllowedData(self, data: list):
+        pts = []
+        if self.eXSpectStepRB.isChecked():
+            pts = CreateEllipseSpectrum(*data, hidden='stepa')
+        elif self.eYSpectStepRB.isChecked():
+            pts = CreateEllipseSpectrum(*data, hidden='stepb')
+        return pts
 
     def paintCircle(self):
         if self.cSpectrumCB.isChecked():
-            data = self.getCircleData(spectrum=True)
-
-            if None in data:
-                return
-            
-            pts = self.decideCircleSpectrumAllowedData(data)
+            pts = self.decideCircleSpectrumAllowedData((0, 0, 1, STEP, AMT, "rend"))
             self.selectAlg(pts)
         else:
             pts = self.getCircleData(spectrum=False)
 
             if None in pts:
                 return
-            
+
             self.selectAlg([pts])
         self.canvas.update()
 
     def paintEllipse(self):
         if self.eSpectrumCB.isChecked():
-            data = self.getEllipseData(spectrum=True)
+            # data = self.getEllipseData(spectrum=True)
 
-            if None in data:
-                return
-            
-            pts = CreateEllipseSpectrum(*data)
+            pts = self.decideEllipseSpectrumAllowedData((0, 0, 2, 1, STEP, STEP, AMT, "stepb"))
             self.selectAlg(pts, figure='e')
         else:
             pts = self.getEllipseData(spectrum=False)
@@ -225,7 +253,8 @@ class UI(QtWidgets.QMainWindow):
 
         plt.figure(figsize=(10, 6))
         plt.rcParams['font.size'] = '15'
-        plt.title(f"Скорость построения окружностей в зависимости от радиуса\n(шаг изменения радиуса = {radiuses[1] - radiuses[0]})")
+        plt.title(
+            f"Скорость построения окружностей в зависимости от радиуса\n(шаг изменения радиуса = {radiuses[1] - radiuses[0]})")
 
         methods = ["Каноническое\nуравнение", "Параметрическое\nуравнение", "Алгоритм\nсредней точки",
                    "Алгоритм\nБрезенхема", "Библиотечная\nфункция"]
@@ -243,7 +272,7 @@ class UI(QtWidgets.QMainWindow):
         if None in data:
             return
 
-        pts = CreateEllipseSpectrum(*data)
+        pts = self.decideEllipseSpectrumAllowedData(data)
 
         painter = QPainter()
         methods = (
@@ -253,6 +282,7 @@ class UI(QtWidgets.QMainWindow):
             EllipseBresenhamMeasure,
             lambda a, b: painter.drawEllipse(0, 0, a, b)
         )
+
         times = [[0 for _ in pts] for _ in range(len(methods))]
         semiaxes = np.array([tuple(map(round, (a[-2:]))) for a in pts])
 
@@ -267,8 +297,8 @@ class UI(QtWidgets.QMainWindow):
 
         plt.figure(figsize=(10, 6))
         plt.rcParams['font.size'] = '15'
-        print(semiaxes)
-        plt.title(f"Скорость построения эллипсов в зависимости от размеров полуосей\n(шаг изменения полуосей = {semiaxes[1, 0] - semiaxes[0, 0]})")
+        plt.title(
+            f"Скорость построения эллипсов в зависимости от размеров полуосей\n(шаг изменения полуосей = {semiaxes[1, 0] - semiaxes[0, 0]})")
 
         methods = ["Каноническое\nуравнение", "Параметрическое\nуравнение", "Алгоритм\nсредней точки",
                    "Алгоритм\nБрезенхема", "Библиотечная\nфункция"]
@@ -280,6 +310,7 @@ class UI(QtWidgets.QMainWindow):
 
         plt.legend()
         plt.show()
+
 
 app = QtWidgets.QApplication(sys.argv)
 window = UI()
