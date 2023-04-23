@@ -17,9 +17,9 @@ from bresenham import CircleBresenhamMeasure, EllipseBresenhamMeasure
 
 from utils import CreateCircleSpectrum, CreateEllipseSpectrum
 
-REPS = 200
-STEP = 10
-AMT = 100
+REPS = 50
+STEP = 40
+AMT = 20
 
 class UI(QtWidgets.QMainWindow):
     def __init__(self):
@@ -49,24 +49,16 @@ class UI(QtWidgets.QMainWindow):
         self.bgColorSwatch_6.changeColor.connect(self.canvas.changeBgColor)
         self.bgColorSwatch_7.changeColor.connect(self.canvas.changeBgColor)
 
-        self.cSpectrumCB.stateChanged.connect(
-            lambda: self.circleSW.setCurrentIndex(self.cSpectrumCB.isChecked()))
-        self.eSpectrumCB.stateChanged.connect(
-            lambda: self.ellipseSW.setCurrentIndex(self.eSpectrumCB.isChecked()))
+        self.cSpectrumCB.stateChanged.connect(lambda: self.circleSW.setCurrentIndex(self.cSpectrumCB.isChecked()))
+        self.eSpectrumCB.stateChanged.connect(lambda: self.ellipseSW.setCurrentIndex(self.eSpectrumCB.isChecked()))
 
-        self.cSpectRadStartRB.toggled.connect(
-            lambda: self.cSpectRadStartLE.setEnabled(not self.cSpectRadStartRB.isChecked()))
-        self.cSpectRadEndRB.toggled.connect(
-            lambda: self.cSpectRadEndLE.setEnabled(not self.cSpectRadEndRB.isChecked()))
-        self.cSpectStepRB.toggled.connect(
-            lambda: self.cSpectStepLE.setEnabled(not self.cSpectStepRB.isChecked()))
-        self.cSpectAmtRB.toggled.connect(
-            lambda: self.cSpectAmtLE.setEnabled(not self.cSpectAmtRB.isChecked()))
+        self.cSpectRadStartCB.clicked.connect(lambda: self.circleBoxesCheck(self.cSpectRadStartCB, self.cSpectRadStartLE))
+        self.cSpectRadEndCB.clicked.connect(lambda:   self.circleBoxesCheck(self.cSpectRadEndCB, self.cSpectRadEndLE))
+        self.cSpectStepCB.clicked.connect(lambda:     self.circleBoxesCheck(self.cSpectStepCB, self.cSpectStepLE))
+        self.cSpectAmtCB.clicked.connect(lambda:      self.circleBoxesCheck(self.cSpectAmtCB, self.cSpectAmtLE))
 
-        self.eXSpectStepRB.toggled.connect(
-            lambda: self.eXSpectStepLE.setEnabled(not self.eXSpectStepRB.isChecked()))
-        self.eYSpectStepRB.toggled.connect(
-            lambda: self.eYSpectStepLE.setEnabled(not self.eYSpectStepRB.isChecked()))
+        self.eXSpectStepCB.clicked.connect(lambda: self.ellipseBoxesCheck(self.eXSpectStepCB, self.eXSpectStepLE))
+        self.eYSpectStepCB.clicked.connect(lambda: self.ellipseBoxesCheck(self.eYSpectStepCB, self.eYSpectStepLE))
 
         self.cPaintPB.clicked.connect(self.paintCircle)
         self.ePaintPB.clicked.connect(self.paintEllipse)
@@ -78,12 +70,29 @@ class UI(QtWidgets.QMainWindow):
 
         self.msgbox = QtWidgets.QMessageBox(self)
 
+        self.circleCurrentDisabled = [self.cSpectAmtCB, self.cSpectAmtLE]
+        self.ellipseCurrentDisabled = [self.eYSpectStepCB, self.eYSpectStepLE]
+
         self.show()
 
     def clearCanvas(self):
         self.canvas.shapes.clear()
 
         self.canvas.update()
+
+    def circleBoxesCheck(self, cb, le):
+        self.circleCurrentDisabled[0].setChecked(True)
+        self.circleCurrentDisabled[1].setEnabled(True)
+        cb.setChecked(False)
+        le.setEnabled(False)
+        self.circleCurrentDisabled = [cb, le]
+
+    def ellipseBoxesCheck(self, cb, le):         
+        self.ellipseCurrentDisabled[0].setChecked(True)
+        self.ellipseCurrentDisabled[1].setEnabled(True)
+        cb.setChecked(False)
+        le.setEnabled(False)
+        self.ellipseCurrentDisabled = [cb, le]
 
     def tryGetLineEditData(self, lineEdit, T=float, vmin=None, vmax=None, vdefault=0):
         try:
@@ -162,8 +171,8 @@ class UI(QtWidgets.QMainWindow):
         if spectrum:
             cx = self.tryGetLineEditData(self.eSpectCXLE, vmin=0)
             cy = self.tryGetLineEditData(self.eSpectCYLE, vmin=0)
-            astart = self.tryGetLineEditData(self.eSpectAStartLE, vmin=0)
-            bstart = self.tryGetLineEditData(self.eSpectBStartLE, vmin=0)
+            astart = self.tryGetLineEditData(self.eSpectAStartLE, vmin=1)
+            bstart = self.tryGetLineEditData(self.eSpectBStartLE, vmin=1)
             sta = self.tryGetLineEditData(self.eXSpectStepLE, T=int, vmin=1)
             stb = self.tryGetLineEditData(self.eYSpectStepLE, T=int, vmin=1)
             amt = self.tryGetLineEditData(self.eSpectAmtLE, T=int, vmin=1)
@@ -177,11 +186,11 @@ class UI(QtWidgets.QMainWindow):
 
     def decideCircleSpectrumAllowedData(self, data: list):
         pts = []
-        if self.cSpectRadStartRB.isChecked():
+        if not self.cSpectRadStartCB.isChecked():
             pts = CreateCircleSpectrum(*data, hidden='rstart')
-        elif self.cSpectRadEndRB.isChecked():
+        elif not self.cSpectRadEndCB.isChecked():
             pts = CreateCircleSpectrum(*data, hidden='rend')
-        elif self.cSpectStepRB.isChecked():
+        elif not self.cSpectStepCB.isChecked():
             pts = CreateCircleSpectrum(*data, hidden='step')
         else:
             pts = CreateCircleSpectrum(*data, hidden='amt')
@@ -189,15 +198,16 @@ class UI(QtWidgets.QMainWindow):
 
     def decideEllipseSpectrumAllowedData(self, data: list):
         pts = []
-        if self.eXSpectStepRB.isChecked():
+        if not self.eXSpectStepCB.isChecked():
             pts = CreateEllipseSpectrum(*data, hidden='stepa')
-        elif self.eYSpectStepRB.isChecked():
+        else:
             pts = CreateEllipseSpectrum(*data, hidden='stepb')
         return pts
 
     def paintCircle(self):
         if self.cSpectrumCB.isChecked():
-            pts = self.decideCircleSpectrumAllowedData((0, 0, 1, STEP, AMT, "rend"))
+            data = self.getCircleData(spectrum=True)
+            pts = self.decideCircleSpectrumAllowedData(data)
             self.selectAlg(pts)
         else:
             pts = self.getCircleData(spectrum=False)
@@ -210,9 +220,9 @@ class UI(QtWidgets.QMainWindow):
 
     def paintEllipse(self):
         if self.eSpectrumCB.isChecked():
-            # data = self.getEllipseData(spectrum=True)
+            data = self.getEllipseData(spectrum=True)
 
-            pts = self.decideEllipseSpectrumAllowedData((0, 0, 2, 1, STEP, STEP, AMT, "stepb"))
+            pts = self.decideEllipseSpectrumAllowedData(data)
             self.selectAlg(pts, figure='e')
         else:
             pts = self.getEllipseData(spectrum=False)
@@ -224,12 +234,7 @@ class UI(QtWidgets.QMainWindow):
         self.canvas.update()
 
     def measureTimeCircle(self):
-        data = self.getCircleData(spectrum=True)
-
-        if None in data:
-            return
-
-        pts = self.decideCircleSpectrumAllowedData(data)
+        pts = CreateCircleSpectrum(0, 0, 1, None, STEP, AMT, hidden='rend')
 
         painter = QPainter()
         methods = (
@@ -267,12 +272,7 @@ class UI(QtWidgets.QMainWindow):
         plt.show()
 
     def measureTimeEllipse(self):
-        data = self.getEllipseData(spectrum=True)
-
-        if None in data:
-            return
-
-        pts = self.decideEllipseSpectrumAllowedData(data)
+        pts = CreateEllipseSpectrum(0, 0, 2, 1, STEP, STEP, AMT, hidden='stepb')
 
         painter = QPainter()
         methods = (
@@ -289,8 +289,9 @@ class UI(QtWidgets.QMainWindow):
         for m in range(len(times)):
             for a in range(len(times[m])):
                 for _ in range(REPS):
+                    cur_method = methods[m]
                     beg = time()
-                    methods[m](*semiaxes[a])
+                    cur_method(*semiaxes[a])
                     end = time()
                     times[m][a] += end - beg
                 times[m][a] /= REPS

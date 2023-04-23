@@ -58,13 +58,13 @@ def CreateEllipseSpectrum(cx, cy, astart, bstart, sta, stb, amt, hidden='stepa')
     pts = []
     if hidden == 'stepa':
         for _ in range(amt):
-            _sta = astart / bstart * stb
+            _sta = round(astart / bstart * stb)
             pts.append((cx, cy, astart + _sta, bstart + stb))
             astart += _sta
             bstart += stb
     elif hidden == 'stepb':
         for _ in range(amt):
-            _stb = bstart / astart * sta 
+            _stb = round(bstart / astart * sta) 
             pts.append((cx, cy, astart + sta, bstart + _stb))
             astart += sta
             bstart += _stb
