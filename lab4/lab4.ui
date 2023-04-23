@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1376</width>
-    <height>1008</height>
+    <height>1014</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -762,7 +762,7 @@ font: 10pt</string>
                    </font>
                   </property>
                   <property name="text">
-                   <string>600</string>
+                   <string>700</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignCenter</set>
@@ -1142,7 +1142,21 @@ font: 10pt</string>
             <string>Эллипса</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_5" columnstretch="0,0,0">
-            <item row="2" column="1" colspan="2">
+            <item row="0" column="1">
+             <widget class="QCheckBox" name="eSpectrumCB">
+              <property name="font">
+               <font>
+                <pointsize>14</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Построить спектр</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1" colspan="2">
              <widget class="QPushButton" name="ePaintPB">
               <property name="maximumSize">
                <size>
@@ -1162,21 +1176,7 @@ font: 10pt</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
-             <widget class="QCheckBox" name="eSpectrumCB">
-              <property name="font">
-               <font>
-                <pointsize>14</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>Построить спектр</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
+            <item row="2" column="1">
              <widget class="QStackedWidget" name="ellipseSW">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -1274,7 +1274,7 @@ font: 10pt</string>
                    </font>
                   </property>
                   <property name="text">
-                   <string>500</string>
+                   <string>700</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignCenter</set>
@@ -1328,8 +1328,8 @@ font: 10pt</string>
               </widget>
               <widget class="QWidget" name="eSpectrum">
                <layout class="QGridLayout" name="gridLayout_9">
-                <item row="0" column="0">
-                 <widget class="QLabel" name="label_8">
+                <item row="4" column="0">
+                 <widget class="QLabel" name="label_19">
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
@@ -1338,7 +1338,31 @@ font: 10pt</string>
                    </font>
                   </property>
                   <property name="text">
-                   <string>Центр</string>
+                   <string>Шаг (верт.)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_9">
+                  <property name="font">
+                   <font>
+                    <pointsize>14</pointsize>
+                    <weight>75</weight>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Полуоси</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="3">
+                 <widget class="QRadioButton" name="eXSpectStepRB">
+                  <property name="toolTip">
+                   <string>Скрыть</string>
+                  </property>
+                  <property name="text">
+                   <string/>
                   </property>
                  </widget>
                 </item>
@@ -1362,50 +1386,6 @@ font: 10pt</string>
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="2">
-                 <widget class="QLineEdit" name="eSpectBStartLE">
-                  <property name="font">
-                   <font>
-                    <pointsize>14</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>40</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                  <property name="placeholderText">
-                   <string>b</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="3">
-                 <widget class="QRadioButton" name="eXSpectStepRB">
-                  <property name="toolTip">
-                   <string>Скрыть</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="label_9">
-                  <property name="font">
-                   <font>
-                    <pointsize>14</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Полуоси</string>
-                  </property>
-                 </widget>
-                </item>
                 <item row="0" column="1">
                  <widget class="QLineEdit" name="eSpectCXLE">
                   <property name="font">
@@ -1426,8 +1406,11 @@ font: 10pt</string>
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="0">
-                 <widget class="QLabel" name="label_18">
+                <item row="4" column="1" colspan="2">
+                 <widget class="QLineEdit" name="eYSpectStepLE">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
@@ -1436,12 +1419,28 @@ font: 10pt</string>
                    </font>
                   </property>
                   <property name="text">
-                   <string>Количество</string>
+                   <string>10</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="label_16">
+                <item row="4" column="3">
+                 <widget class="QRadioButton" name="eYSpectStepRB">
+                  <property name="toolTip">
+                   <string>Скрыть</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QLineEdit" name="eSpectBStartLE">
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
@@ -1450,24 +1449,17 @@ font: 10pt</string>
                    </font>
                   </property>
                   <property name="text">
-                   <string>Шаг (гор.)</string>
+                   <string>40</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                  <property name="placeholderText">
+                   <string>b</string>
                   </property>
                  </widget>
                 </item>
-                <item row="5" column="0" colspan="3">
-                 <spacer name="verticalSpacer_3">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>20</width>
-                    <height>40</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="2" column="1" colspan="2">
+                <item row="3" column="1" colspan="2">
                  <widget class="QLineEdit" name="eXSpectStepLE">
                   <property name="font">
                    <font>
@@ -1504,7 +1496,48 @@ font: 10pt</string>
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="1" colspan="2">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_8">
+                  <property name="font">
+                   <font>
+                    <pointsize>14</pointsize>
+                    <weight>75</weight>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Центр</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="0" colspan="3">
+                 <spacer name="verticalSpacer_3">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="3" column="0">
+                 <widget class="QLabel" name="label_16">
+                  <property name="font">
+                   <font>
+                    <pointsize>14</pointsize>
+                    <weight>75</weight>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Шаг (гор.)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1" colspan="2">
                  <widget class="QLineEdit" name="eSpectAmtLE">
                   <property name="enabled">
                    <bool>true</bool>
@@ -1524,8 +1557,8 @@ font: 10pt</string>
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="0">
-                 <widget class="QLabel" name="label_19">
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_18">
                   <property name="font">
                    <font>
                     <pointsize>14</pointsize>
@@ -1534,40 +1567,7 @@ font: 10pt</string>
                    </font>
                   </property>
                   <property name="text">
-                   <string>Шаг (верт.)</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="1" colspan="2">
-                 <widget class="QLineEdit" name="eYSpectStepLE">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>14</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>10</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="3">
-                 <widget class="QRadioButton" name="eYSpectStepRB">
-                  <property name="toolTip">
-                   <string>Скрыть</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="checked">
-                   <bool>true</bool>
+                   <string>Количество</string>
                   </property>
                  </widget>
                 </item>
