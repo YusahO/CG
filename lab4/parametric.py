@@ -7,7 +7,7 @@ def CircleParametricDraw(cx, cy, R, color=QColor(0, 0, 0)):
     t = 1 / R
     da = 0
 
-    while da <= pi / 4 + t:
+    while da <= pi / 4:
         x = round(R * cos(da))
         y = round(R * sin(da))
 
@@ -23,7 +23,7 @@ def CircleParametricMeasure(R):
     t = 1 / R
     da = 0
 
-    while da <= pi / 4 + t:
+    while da <= pi / 4:
         x = round(R * cos(da))
         y = round(R * sin(da))
 
@@ -36,7 +36,7 @@ def EllipseParametricDraw(cx, cy, a, b, color=QColor(0, 0, 0)):
 
     da = 0
 
-    while da <= pi / 2 + t:
+    while da <= pi / 2:
         x = round(a * cos(da))
         y = round(b * sin(da))
 
@@ -54,7 +54,7 @@ def EllipseParametricMeasure(a, b):
 
     da = 0
 
-    while da <= pi / 2 + t:
+    while da <= pi / 2:
         x = round(a * cos(da))
         y = round(b * sin(da))
 

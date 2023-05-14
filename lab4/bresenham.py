@@ -5,35 +5,18 @@ def CircleBresenhamDraw(cx, cy, R, color=QColor(0, 0, 0)):
     pts = []
     x = 0
     y = R
+
     D = 2 * (1 - R)
 
     while x <= y:
         pts.extend(AddSymmetricPointsCircle(cx, cy, x + cx, y + cy))
-
-        if D < 0:
-            d1 = 2 * D + 2 * y - 1
-            if d1 < 0:
-                x += 1
-                D += 2 * x + 1
-            else:
-                x += 1
-                y -= 1
-                D += 2 * (x - y + 1)
-        elif D > 0:
-            d2 = 2 * D - 2 * x - 1
-            if d2 < 0:
-                x += 1
-                y -= 1
-                D += 2 * (x - y + 1)
-            else:
-                y -= 1
-                D -= 2 * y + 1
+        x += 1
+        if D < 0 and 2 * D + 2 * y - 1 < 0:
+            D += 2 * x + 1
         else:
-            x += 1
             y -= 1
             D += 2 * (x - y + 1)
-
-    
+        
     pts.append(color)
     pts.append(False)
     return pts
@@ -44,26 +27,10 @@ def CircleBresenhamMeasure(R):
     D = 2 * (1 - R)
 
     while x <= y:
-        if D < 0:
-            d1 = 2 * D + 2 * y - 1
-            if d1 < 0:
-                x += 1
-                D += 2 * x + 1
-            else:
-                x += 1
-                y -= 1
-                D += 2 * (x - y + 1)
-        elif D > 0:
-            d2 = 2 * D - 2 * x - 1
-            if d2 < 0:
-                x += 1
-                y -= 1
-                D += 2 * (x - y + 1)
-            else:
-                y -= 1
-                D -= 2 * y + 1
+        x += 1
+        if D < 0 and 2 * D + 2 * y - 1 < 0:
+            D += 2 * x + 1
         else:
-            x += 1
             y -= 1
             D += 2 * (x - y + 1)
 

@@ -35,19 +35,18 @@ def EllipseCanonicDraw(cx, cy, a, b, color=QColor(0, 0, 0)):
     b_sq = b * b
 
     edge_x = round(a / sqrt(1 + b_sq / a_sq))
-    edge_y = round(b / sqrt(1 + a_sq / b_sq))
+    # edge_y = round(b / sqrt(1 + a_sq / b_sq))
 
     x = 0
     while x <= edge_x:
-        y = sqrt(a_sq * b_sq - x ** 2 * b_sq) / a
+        y = round(sqrt(a_sq * b_sq - x ** 2 * b_sq) / a)
         pts.extend(AddSymmetricPointsEllipse(cx, cy, x + cx, y + cy))
         x += 1
 
-    y = 0
-    while y <= edge_y:
-        x = sqrt(a_sq * b_sq - y ** 2 * a_sq) / b
+    while y >= 0:
+        x = round(sqrt(a_sq * b_sq - y ** 2 * a_sq) / b)
         pts.extend(AddSymmetricPointsEllipse(cx, cy, x + cx, y + cy))
-        y += 1
+        y -= 1
 
     pts.append(color)
     pts.append(False)
@@ -60,14 +59,13 @@ def EllipseCanonicMeasure(a, b):
     b_sq = b * b
 
     edge_x = round(a / sqrt(1 + b_sq / a_sq))
-    edge_y = round(b / sqrt(1 + a_sq / b_sq))
+    # edge_y = round(b / sqrt(1 + a_sq / b_sq))
 
     x = 0
     while x <= edge_x:
         y = sqrt(a_sq * b_sq - x ** 2 * b_sq) / a
         x += 1
 
-    y = 0
-    while y <= edge_y:
+    while y >= 0:
         x = sqrt(a_sq * b_sq - y ** 2 * a_sq) / b
-        y += 1
+        y -= 1

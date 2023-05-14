@@ -70,6 +70,29 @@ class UI(QtWidgets.QMainWindow):
 
         self.msgbox = QtWidgets.QMessageBox(self)
 
+        self.authorAction.triggered.connect(
+            lambda: self.msgbox.information(
+                self,
+                'Об авторе',
+                '<font size=14><b>Шубенина Дарья ИУ7-41Б</b></font>'
+            )
+        )
+
+        self.progAction.triggered.connect(
+            lambda: self.msgbox.information(
+                self,
+                'Условие',
+                '''<font size=14><b>Реализовать алгоритмы \
+                построения окружностей и эллипсов. \
+                Агоритмы: по каноническому уравнению, \
+                параметрическому уравнению, \
+                метод средней точки, \
+                агоритм Брезенхема. \
+                Сравнить алгоритмы по времени.</b></font>'''
+            )
+        )
+
+
         self.circleCurrentDisabled = [self.cSpectAmtCB, self.cSpectAmtLE]
         self.ellipseCurrentDisabled = [self.eYSpectStepCB, self.eYSpectStepLE]
 
@@ -169,13 +192,13 @@ class UI(QtWidgets.QMainWindow):
 
     def getEllipseData(self, spectrum=False):
         if spectrum:
-            cx = self.tryGetLineEditData(self.eSpectCXLE, vmin=0)
-            cy = self.tryGetLineEditData(self.eSpectCYLE, vmin=0)
-            astart = self.tryGetLineEditData(self.eSpectAStartLE, vmin=1)
-            bstart = self.tryGetLineEditData(self.eSpectBStartLE, vmin=1)
-            sta = self.tryGetLineEditData(self.eXSpectStepLE, T=int, vmin=1)
-            stb = self.tryGetLineEditData(self.eYSpectStepLE, T=int, vmin=1)
-            amt = self.tryGetLineEditData(self.eSpectAmtLE, T=int, vmin=1)
+            cx = round(self.tryGetLineEditData(self.eSpectCXLE, vmin=0))
+            cy = round(self.tryGetLineEditData(self.eSpectCYLE, vmin=0))
+            astart = round(self.tryGetLineEditData(self.eSpectAStartLE, vmin=1))
+            bstart = round(self.tryGetLineEditData(self.eSpectBStartLE, vmin=1))
+            sta = round(self.tryGetLineEditData(self.eXSpectStepLE, T=int, vmin=1))
+            stb = round(self.tryGetLineEditData(self.eYSpectStepLE, T=int, vmin=1))
+            amt = round(self.tryGetLineEditData(self.eSpectAmtLE, T=int, vmin=1))
             return cx, cy, astart, bstart, sta, stb, amt
         else:
             cx = self.tryGetLineEditData(self.exLE, vmin=0)
@@ -299,7 +322,7 @@ class UI(QtWidgets.QMainWindow):
         plt.figure(figsize=(10, 6))
         plt.rcParams['font.size'] = '15'
         plt.title(
-            f"Скорость построения эллипсов в зависимости от размеров полуосей\n(шаг изменения полуосей = {semiaxes[1, 0] - semiaxes[0, 0]})")
+            f"Скорость построения эллипсов в зависимости от размеров полуосей\n(шаг изменения по гор. полуоси = {semiaxes[1, 0] - semiaxes[0, 0]})")
 
         methods = ["Каноническое\nуравнение", "Параметрическое\nуравнение", "Алгоритм\nсредней точки",
                    "Алгоритм\nБрезенхема", "Библиотечная\nфункция"]
