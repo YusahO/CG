@@ -30,6 +30,7 @@ class UI(QtWidgets.QMainWindow):
         self.ptAddPB.clicked.connect(self.addPoint)
         self.closePB.clicked.connect(self.closePoly)
 
+        self.fillPB.clicked.connect(self.canvas.fill)
         self.canvasClearPB.clicked.connect(self.clearCanvas)
 
         self.canvas.setParent(self)
@@ -40,6 +41,7 @@ class UI(QtWidgets.QMainWindow):
 
     def clearCanvas(self):
         self.canvas.canvasPolygons.clear()
+        self.rect
         self.table.clearContents()
         self.table.setRowCount(0)
         self.canvas.update()
@@ -66,14 +68,17 @@ class UI(QtWidgets.QMainWindow):
         return v
 
     def addPoint(self):
-        x = round(self.tryGetLineEditData(self.ptXLE, vmin=0))
+        x = self.tryGetLineEditData(self.ptXLE, vmin=0)
         if x is None:
             return
-        y = round(self.tryGetLineEditData(self.ptYLE, vmin=0))
+        y = self.tryGetLineEditData(self.ptYLE, vmin=0)
         if y is None:
             return
+        
+        x = round(x)
+        y = round(y)
 
-        self.canvas.addPointToCanvas(QtCore.QPoint(x, y))
+        self.canvas.addPointToCanvas(QtCore.QPoint(x, y), from_mouse=False)
 
         self.canvas.update()
 

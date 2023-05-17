@@ -9,7 +9,7 @@ def CircleMidpointDraw(cx, cy, R, color=QColor(0, 0, 0)):
     x = 0
     y = R
 
-    p = 1 - R
+    p = 5/4 - R
     while x <= y:
         pts.extend(AddSymmetricPointsCircle(cx, cy, x + cx, y + cy))
 
