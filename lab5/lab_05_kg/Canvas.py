@@ -2,10 +2,10 @@ from PyQt5 import QtGui, QtWidgets, uic, QtCore
 from PyQt5.QtGui import QPainter, QPen, QColor, QPixmap
 from PyQt5.QtCore import QPoint, QPointF, QLineF
 
-LEFT_BTN = 1
-RIGHT_BTN = 2
+LMB = 1
+RMB = 2
 
-class CanvasPolygon:
+class Polygon:
     def __init__(self) -> None:
         self.points = []
         self.ready = False
@@ -67,13 +67,13 @@ class Canvas(QtWidgets.QLabel):
 
     def mousePressEvent(self, a0) -> None:
         # self.pixmap().fill(QColor(0xFFFF00))
-        if a0.button() == LEFT_BTN:
+        if a0.button() == LMB:
             if len(self.canvas_polygons) == 0 or self.canvas_polygons[-1].isReady():
-                self.canvas_polygons.append(CanvasPolygon())
+                self.canvas_polygons.append(Polygon())
             a0 = self.getValidMpos()
             self.canvas_polygons[-1].addPoint(QPointF(a0.x(), a0.y()))
 
-        elif a0.button() == RIGHT_BTN:
+        elif a0.button() == RMB:
             if len(self.canvas_polygons) != 0:
                 if len(self.canvas_polygons[-1]) <= 2:
                     self.canvas_polygons.pop(-1)

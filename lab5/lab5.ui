@@ -20,7 +20,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
         <item>
-         <widget class="QLabel" name="label_15">
+         <widget class="QLabel" name="curposLabel">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
             <horstretch>0</horstretch>
@@ -53,7 +53,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_20">
+         <widget class="QLabel" name="timeLabel">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
             <horstretch>0</horstretch>
@@ -131,9 +131,9 @@
         <property name="title">
          <string>Параметры заливки</string>
         </property>
-        <layout class="QGridLayout" name="gridLayout" rowstretch="1">
+        <layout class="QGridLayout" name="gridLayout" rowstretch="1,0">
          <item row="0" column="0">
-          <widget class="QRadioButton" name="delayRB">
+          <widget class="QRadioButton" name="nodelayRB">
            <property name="text">
             <string>Без задержки</string>
            </property>
@@ -143,10 +143,49 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QRadioButton" name="noDelayRB">
+          <widget class="QRadioButton" name="delayRB">
            <property name="text">
             <string>С задержкой</string>
            </property>
+          </widget>
+         </item>
+         <item row="1" column="0" colspan="2">
+          <widget class="QStackedWidget" name="stackedWidget">
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <widget class="QWidget" name="page">
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <item>
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>1 мс</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSlider" name="horizontalSlider">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>10</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>10 мс</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="page_2"/>
           </widget>
          </item>
         </layout>

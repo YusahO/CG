@@ -1,14 +1,14 @@
 from PyQt5 import QtGui, QtWidgets, uic
 from PyQt5.QtGui import QPainter, QPen, QColor
 from PyQt5.QtCore import QPoint, QPointF, QLineF
-from Canvas import CanvasPolygon
+from Canvas import Polygon
 
 class CoordTable(QtWidgets.QTableWidget):
     def __init__(self, parent):
         super().__init__(parent)
         self.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
     
-    def rebuildTable(self, li: list[CanvasPolygon]):
+    def rebuildTable(self, li: list[Polygon]):
         self.setRowCount(0)
         for polygon in li:
             for point in polygon.points:

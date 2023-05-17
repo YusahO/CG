@@ -2,9 +2,10 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from PyQt5 import uic, QtWidgets, QtCore
-from PyQt5.QtGui import QPainter
+from PyQt5.QtGui import QColor
+from PyQt5.QtCore import QPoint
+from threading import Thread
 from time import time
-
 
 class UI(QtWidgets.QMainWindow):
     def __init__(self):
@@ -30,7 +31,11 @@ class UI(QtWidgets.QMainWindow):
         self.ptAddPB.clicked.connect(self.addPoint)
         self.closePB.clicked.connect(self.closePoly)
 
-        self.fillPB.clicked.connect(self.canvas.fill)
+        self.nodelayRB.toggled.connect(
+            lambda: self.stackedWidget.setCurrentIndex(self.nodelayRB.isChecked())
+        )
+
+        self.fillPB.clicked.connect(self.launchInThread)
         self.canvasClearPB.clicked.connect(self.clearCanvas)
 
         self.canvas.setParent(self)
@@ -41,7 +46,8 @@ class UI(QtWidgets.QMainWindow):
 
     def clearCanvas(self):
         self.canvas.canvasPolygons.clear()
-        self.rect
+        self.canvas.rects.clear()
+        self.canvas.pixmap().fill(QColor(0xFFFFFF))
         self.table.clearContents()
         self.table.setRowCount(0)
         self.canvas.update()
@@ -86,6 +92,18 @@ class UI(QtWidgets.QMainWindow):
         self.canvas.closeCanvasPolygon()
         self.update()
 
+    def launchInThread(self):
+        thread = Thread(target=self.fill)
+        thread.start()
+
+    def fill(self):
+        if self.delayRB.isChecked():
+            delay = self.horizontalSlider.value() * 0.001
+            self.canvas.fillDelay(delay)
+        else:
+            self.canvas.setMouseTracking(False)
+            self.canvas.fillNoDelay()
+            self.canvas.setMouseTracking(True)
 
 app = QtWidgets.QApplication(sys.argv)
 window = UI()
