@@ -978,16 +978,22 @@ font: 10pt</string>
      </font>
     </property>
     <property name="title">
-     <string>Об авторе</string>
+     <string>Справка</string>
     </property>
-    <addaction name="action_7_41"/>
+    <addaction name="author"/>
+    <addaction name="prog"/>
    </widget>
    <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="action_7_41">
+  <action name="author">
    <property name="text">
-    <string>ИУ7-41Б Шубенина Дарья</string>
+    <string>Об авторе</string>
+   </property>
+  </action>
+  <action name="prog">
+   <property name="text">
+    <string>О программе</string>
    </property>
   </action>
  </widget>

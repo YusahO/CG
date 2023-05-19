@@ -42,6 +42,22 @@ class UI(QtWidgets.QMainWindow):
 
         self.msgbox = QtWidgets.QMessageBox(self)
 
+        self.author.triggered.connect(
+            lambda: self.msgbox.information(
+                self,
+                'Об авторе',
+                '<font size=14><b>Шубенина Дарья ИУ7-41Б</b></font>'
+            )
+        )
+
+        self.prog.triggered.connect(
+            lambda: self.msgbox.information(
+                self,
+                'Условие',
+                '''<font size=14><b>Реализовать и исследовать алгоритм заполнения по ребрам</b></font>'''
+            )
+        )
+
         self.show()
 
     def clearCanvas(self):

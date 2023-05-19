@@ -12,7 +12,6 @@ class Polygon:
         self.points = []
         self.color = color
         self.ready = False
-        self.filling = False
 
     def __getitem__(self, key):
         return self.points[key]
@@ -45,6 +44,7 @@ class Canvas(QtWidgets.QLabel):
     curPosLabel = None
     canvasPolygons = []
     rects = []
+    filling = False
 
     parentPtr = None
 
@@ -59,6 +59,14 @@ class Canvas(QtWidgets.QLabel):
         self.shiftPressed = False
 
         self.update()
+
+    def drawToPixmap(self):
+        painter = QPainter(self.pixmap())
+        
+        for polygon in self.canvasPolygons:
+            polygon.draw(painter)
+        
+        painter.end()
 
     def resizeEvent(self, event) -> None:
         self.setPixmap(QPixmap(event.size().width(), event.size().height()))
@@ -161,16 +169,10 @@ class Canvas(QtWidgets.QLabel):
         elif event.button() == RMB:
             self.closeCanvasPolygon()
 
+        self.drawToPixmap()
         self.update()
 
-    def paintEvent(self, event):
-        self.painter.begin(self)
-        self.painter.drawPixmap(self.rect(), self.pixmap())
-
-        self.painter.fillRect(0, 0, self.width(), self.height(), 0xFFFFFF)
-
-        self.__drawCoords(self.painter)
-
+    def drawLinesToCanv(self):
         for polygon in self.canvasPolygons:
             polygon.draw(self.painter)
 
@@ -180,11 +182,22 @@ class Canvas(QtWidgets.QLabel):
             self.painter.drawLine(
                 self.canvasPolygons[-1].points[-1], mpos_to_draw)
 
+    def paintEvent(self, event):
+        self.painter.begin(self)
+        self.painter.drawPixmap(self.rect(), self.pixmap())
+
+        self.painter.fillRect(0, 0, self.width(), self.height(), 0xFFFFFF)
+
+        self.__drawCoords(self.painter)
+
+        if not self.filling or True:
+            self.drawLinesToCanv()
+
         self.painter.setPen(self.pen)
         self.painter.end()
 
     def fillNoDelay(self):
-
+        self.filling = True
         start = time_ns()
 
         self.fillColor = self.parentPtr.colorview_2.color
@@ -207,9 +220,14 @@ class Canvas(QtWidgets.QLabel):
         end = time_ns()
         self.parentPtr.timeLabel.setText(
             f'Время построения {(end - start) / 1e6 : .3f} мс')
+        
+        self.drawToPixmap()
+        self.filling = False
         self.update()
 
     def fillDelay(self, delay):
+        self.filling = True
+
         self.fillColor = self.parentPtr.colorview_2.color
         points = []
         for pol in self.canvasPolygons:
@@ -226,6 +244,8 @@ class Canvas(QtWidgets.QLabel):
                     rectPts, points[i], points[i + 1], painter, self, delay, col=self.fillColor)
         painter.end()
 
+        self.drawToPixmap()
+        self.filling = False
         self.update()
 
 
@@ -259,12 +279,10 @@ def GetCollisionNoDelay(rect, p1, p2, painter, pixmap, col=QColor(0, 0, 0)):
     draw_col = [col.red(), col.green(), col.blue()]
     img = pixmap.toImage()
 
-    yend = p2[1]
-
     dx = (p2[0] - p1[0]) / (p2[1] - p1[1])
-    xstart = p1[0]
+    xstart = p1[0] + 0.5
 
-    for y in range(p1[1], yend):
+    for y in range(p1[1], p2[1]):
         x = xstart
 
         pen = QtGui.QPen()
@@ -295,12 +313,10 @@ def GetCollisionDelay(rect, p1, p2, painter, canv, delay, col=QColor(0, 0, 0)):
     draw_col = [col.red(), col.green(), col.blue()]
     img = canv.pixmap().toImage()
 
-    yend = p2[1]
-
     dx = (p2[0] - p1[0]) / (p2[1] - p1[1])
-    xstart = p1[0]
+    xstart = p1[0] + 0.5
 
-    for y in range(p1[1], yend):
+    for y in range(p1[1], p2[1]):
         sleep(delay)
         canv.update()
 
