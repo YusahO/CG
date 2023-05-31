@@ -6,8 +6,6 @@ from time import time_ns, sleep
 LMB = 1
 RMB = 2
 
-CANVAS = None
-
 class Stack:
     data = []
 
@@ -67,8 +65,6 @@ class Canvas(QtWidgets.QLabel):
 
     def __init__(self, parent) -> None:
         super().__init__(parent)
-        global CANVAS
-        CANVAS = self
         self.setMouseTracking(True)
 
         self.painter = QPainter()
@@ -227,11 +223,6 @@ class Canvas(QtWidgets.QLabel):
         self.painter.end()
 
     def fillNoDelay(self):
-        try:
-            CheckPixPos(self, [self.pix_pos.x(), self.pix_pos.y()])
-        except:
-            return False
-
         start = time_ns()
 
         self.fillColor = self.parentPtr.colorview_2.color
@@ -252,12 +243,9 @@ class Canvas(QtWidgets.QLabel):
             f'Время построения {(end - start) / 1e6 : .3f} мс')
         self.update()
 
-    def fillDelay(self, delay):
-        try:
-            CheckPixPos(self, [self.pix_pos.x(), self.pix_pos.y()])
-        except:
-            return False
+        self.pix_input = False
 
+    def fillDelay(self, delay):
         self.fillColor = self.parentPtr.colorview_2.color
         points = []
         for pol in self.canvasPolygons:
@@ -273,24 +261,7 @@ class Canvas(QtWidgets.QLabel):
         painter.end()
         self.update()
 
-def CheckPixPos(canv, begin_pix, border=QColor(0x000000)):
-    img = canv.pixmap().toImage()
-    seed = QPoint(*begin_pix)
-
-    border_color = border.rgb()
-    pixel = seed
-    x = pixel.x()
-    y = pixel.y()
-    x += 1
-    while img.pixel(x, y) != border_color:
-        if x > canv.width():
-            raise Exception()
-        x += 1
-    x = pixel.x()
-    while img.pixel(x, y) != border_color:
-        x -= 1
-    if x <= 0:
-        raise Exception()
+        self.pix_input = False
 
 def FillAlgDelay(painter, canv, begin_pix, delay, col=QColor(0xFF0000), border=QColor(0x000000)):
     img = canv.pixmap().toImage()
@@ -302,10 +273,10 @@ def FillAlgDelay(painter, canv, begin_pix, delay, col=QColor(0xFF0000), border=Q
     border_color = border.rgb()
     seed_color = col.rgb()
 
-    stack = list()
+    stack = Stack()
 
-    stack.append(seed)
-    while len(stack) != 0:
+    stack.push(seed)
+    while not stack.empty():
         pixel = stack.pop()
         x = pixel.x()
         y = pixel.y()
@@ -315,6 +286,8 @@ def FillAlgDelay(painter, canv, begin_pix, delay, col=QColor(0xFF0000), border=Q
 
         x += 1
         while img.pixel(x, y) != border_color:
+            if x > img.width():
+                return
             painter.drawPoint(x, y)
             x += 1
 
@@ -323,91 +296,88 @@ def FillAlgDelay(painter, canv, begin_pix, delay, col=QColor(0xFF0000), border=Q
         x = temp_x
         x -= 1
         while img.pixel(x, y) != border_color:
+            if x < 0:
+                return
             painter.drawPoint(x, y)
             x -= 1
             
         x_left = x + 1
-
-        FillPart(x_left, y + 1, x_right, seed_color, border_color, stack, canv.pixmap().toImage())
-        FillPart(x_left, y - 1, x_right, seed_color, border_color, stack, canv.pixmap().toImage())
+        
+        FillSearch(x_left, y + 1, x_right, seed_color, border_color, stack, canv.pixmap().toImage())
+        FillSearch(x_left, y - 1, x_right, seed_color, border_color, stack, canv.pixmap().toImage())
 
         sleep(delay)
         canv.update()
         
 
 def FillAlgNoDelay(painter, pixmap, begin_pix, col=QColor(0xFF0000), border=QColor(0x000000)):
-    # Получение координат затравочного пикселя
     img = pixmap.toImage()
     pen = QtGui.QPen()
     pen.setColor(col)
     painter.setPen(pen)
-    seed = QPoint(*begin_pix)
+
+    pix_seed = QPoint(*begin_pix)
 
     border_color = border.rgb()
     seed_color = col.rgb()
-    # need_delay = window.delay.checkState()
 
-    stack = list()
+    stack = Stack()
 
-    # Добавление в стек затравочного пикселя
-    stack.append(seed)
-    while len(stack) != 0:
+    stack.push(pix_seed)
+    while not stack.empty():
         pixel = stack.pop()
         x = pixel.x()
         y = pixel.y()
-        # print(x, y)
-        # Сохраняем x-координату затравочного пикселя
+        
         temp_x = x
         painter.drawPoint(x, y)
 
-        # Закраска пикселей текущей строки влево и вправо
-        # от затравочного до встречи с граничным пикселем
         x += 1
         while img.pixel(x, y) != border_color:
-            # print(img.pixel(x, y), border_color, x, y)
-            # exit()
+            if x > pixmap.width():
+                return
             painter.drawPoint(x, y)
             x += 1
-        # Сохраняем крайний справа пиксель
+            
         x_right = x - 1
-        # Восстанавливаем х
+
         x = temp_x
         x -= 1
+        
         while img.pixel(x, y) != border_color:
+            if x < 0:
+                return
             painter.drawPoint(x, y)
             x -= 1
-        # Сохраняем крайний слева пиксель
+
         x_left = x + 1
 
-        # Поиск новых затравочных пикселей в интервале на двух соседних строках
-        FillPart(x_left, y + 1, x_right, seed_color, border_color, stack, pixmap.toImage())
-        FillPart(x_left, y - 1, x_right, seed_color, border_color, stack, pixmap.toImage())
+        FillSearch(x_left, y + 1, x_right, seed_color, border_color, stack, pixmap.toImage())
+        FillSearch(x_left, y - 1, x_right, seed_color, border_color, stack, pixmap.toImage())
 
-def FillPart(x, y, x_right, pix_color, border_color, stack, pixels):
+def FillSearch(x, y, x_right, seed_color, border_color, stack, pixels):
     while x <= x_right:
-        # Вспомогательный флаг, который используем при определении края закрашиваемой области
         flag = False
         cur_pix_color = pixels.pixel(x, y)
 
-        # цикл для поиска границы закрашиваемой области слева направо
-        while cur_pix_color != pix_color and cur_pix_color != border_color and x <= x_right:
+        while cur_pix_color != seed_color and cur_pix_color != border_color and x <= x_right:
             if not flag:
                 flag = True
             x += 1
             cur_pix_color = pixels.pixel(x, y)
 
-        # Помещаем в стек крайний правый пиксель
+        # Помещаем в стек крайний правый пиксель -- затравка
         if flag:
             # добавляем в стек контура закрашиваемой области точку с координатами (x - 1, y),
             # так как текущая точка (x, y) оказалась за границей области
-            if x == x_right and cur_pix_color != border_color and cur_pix_color != pix_color:
-                stack.append(QPoint(x, y))
+            if x == x_right and cur_pix_color != border_color and cur_pix_color != seed_color:
+                stack.push(QPoint(x, y))
             else:
-                stack.append(QPoint(x - 1, y))
+                stack.push(QPoint(x - 1, y))
         # Продолжаем проверку, если интервал был прерван
         x_last = x
         # Поиск подходящего пикселя
-        while (cur_pix_color == border_color or cur_pix_color == pix_color) and x < x_right:
+        while (cur_pix_color == border_color or cur_pix_color == seed_color) and x < x_right:
             x += 1
             cur_pix_color = pixels.pixel(x, y)
 

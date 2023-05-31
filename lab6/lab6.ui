@@ -129,7 +129,7 @@
          </font>
         </property>
         <property name="title">
-         <string>Параметры заливки</string>
+         <string>Параметры заполнения</string>
         </property>
         <layout class="QGridLayout" name="gridLayout" rowstretch="1,0">
          <item row="0" column="0">
@@ -397,7 +397,7 @@ font: 10pt</string>
             </font>
            </property>
            <property name="text">
-            <string>Цвет заливки</string>
+            <string>Цвет заполнения</string>
            </property>
           </widget>
          </item>
@@ -433,7 +433,7 @@ font: 10pt</string>
               </font>
              </property>
              <property name="text">
-              <string>Выбранный цвет заливки:</string>
+              <string>Выбранный цвет:</string>
              </property>
             </widget>
            </item>

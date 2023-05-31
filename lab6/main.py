@@ -7,18 +7,12 @@ from PyQt5.QtCore import QPoint
 from threading import Thread
 from time import time
 
+func_res = True
+
 class UI(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('/home/daria/Документы/CG/lab6/lab6.ui', self)
-
-        # self.lineColorSwatch_1.changeColor.connect(self.colorview_1.changeCurColor)
-        # self.lineColorSwatch_2.changeColor.connect(self.colorview_1.changeCurColor)
-        # self.lineColorSwatch_3.changeColor.connect(self.colorview_1.changeCurColor)
-        # self.lineColorSwatch_4.changeColor.connect(self.colorview_1.changeCurColor)
-        # self.lineColorSwatch_5.changeColor.connect(self.colorview_1.changeCurColor)
-        # self.lineColorSwatch_6.changeColor.connect(self.colorview_1.changeCurColor)
-        # self.lineColorSwatch_7.changeColor.connect(self.colorview_1.changeCurColor)
 
         self.bgColorSwatch_1.changeColor.connect(self.colorview_2.changeCurColor)
         self.bgColorSwatch_2.changeColor.connect(self.colorview_2.changeCurColor)
@@ -118,18 +112,27 @@ class UI(QtWidgets.QMainWindow):
         y = self.tryGetLineEditData(self.ptYLE, int, vmin=0, vmax=self.canvas.height())
         if y is None:
             return
+        
+        self.canvas.pix_pos = QPoint(x, y)
         thread = Thread(target=self.fill)
         thread.start()
 
+        global func_res
+        if func_res is not None and func_res == False:
+            self.msgbox.critical(
+                self, 'Ошибка!', '<font size=14><b>Затравочный пиксель должен быть внутри замкнутой области!</b></font>'
+            )
+        func_res = None
+
     def fill(self):
+        global func_res
         if self.delayRB.isChecked():
             delay = self.horizontalSlider.value() * 0.001
-            res = self.canvas.fillDelay(delay)
+            func_res = self.canvas.fillDelay(delay)
         else:
             self.canvas.setMouseTracking(False)
-            self.canvas.fillNoDelay()
-            res = self.canvas.setMouseTracking(True)
-        return res
+            func_res = self.canvas.fillNoDelay()
+            self.canvas.setMouseTracking(True)
 
 app = QtWidgets.QApplication(sys.argv)
 window = UI()
