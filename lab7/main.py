@@ -22,6 +22,7 @@ class UI(QtWidgets.QMainWindow):
         self.resColor.clicked.connect(lambda: self.setPBColor(self.resColor))
 
         self.canvClearPB.clicked.connect(self.clearCanvas)
+        self.doPB.clicked.connect(self.canvas.doCutting)
 
         self.author.triggered.connect(
             lambda: self.msgbox.information(

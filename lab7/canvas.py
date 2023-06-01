@@ -1,6 +1,7 @@
 from PyQt5 import QtGui, QtWidgets, QtCore
 from PyQt5.QtCore import Qt, QPoint, QPointF, QRectF
 from PyQt5.QtGui import QPainter, QColor, QPen, QStaticText, QPixmap
+import alg
 
 LMB = 1
 RMB = 2
@@ -71,19 +72,20 @@ class Canvas(QtWidgets.QLabel):
 
     def mouseMoveEvent(self, event):
         self.curMousePos = event.pos()
+        self.setFocus(True)
         self.update()
 
     def getShiftFixedMpos(self):
         mpos = QPointF(self.curMousePos.x(), self.curMousePos.y())
-        if len(self.canvasPolygons) == 0 or len(self.canvasPolygons[-1]) == 0:
+        if len(self.lines) == 0:
             return mpos
 
-        x_dist = abs(mpos.x() - self.canvasPolygons[-1].points[-1].x())
-        y_dist = abs(mpos.y() - self.canvasPolygons[-1].points[-1].y())
+        x_dist = abs(mpos.x() - self.lines[-1].x())
+        y_dist = abs(mpos.y() - self.lines[-1].y())
         if x_dist < y_dist:
-            mpos.setX(self.canvasPolygons[-1].points[-1].x())
+            mpos.setX(self.lines[-1].x())
         else:
-            mpos.setY(self.canvasPolygons[-1].points[-1].y())
+            mpos.setY(self.lines[-1].y())
         return mpos
 
     def getValidMpos(self):
@@ -95,7 +97,7 @@ class Canvas(QtWidgets.QLabel):
         if event.button() == LMB and len(self.lines) // 3 < 10:
             if len(self.lines) % 3 == 0:
                 self.lines.append(self.parentPtr.getPBColor(self.parentPtr.lineColor))
-            self.lines.append(event.pos())
+            self.lines.append(self.getValidMpos())
         elif event.button() == RMB:
             if len(self.cutter) + 1 > 3:
                 self.cutter.clear()
@@ -113,7 +115,7 @@ class Canvas(QtWidgets.QLabel):
         if len(self.lines) % 3 == 2:
             self.pen.setColor(self.lines[-2])
             self.painter.setPen(self.pen)
-            self.painter.drawLine(self.lines[-1], self.curMousePos)
+            self.painter.drawLine(self.lines[-1], self.getValidMpos())
 
     def drawCutterToCanv(self):
         if len(self.cutter) > 0:
@@ -127,6 +129,22 @@ class Canvas(QtWidgets.QLabel):
             r = QRectF(self.cutter[1], self.curMousePos)
             self.painter.drawRect(r)
 
+    def doCutting(self):
+        self.results = []
+        for i in range(0, len(self.lines) - 2, 3):
+            l = \
+            (
+                (self.lines[i + 1].x(), self.lines[i + 1].y()), 
+                (self.lines[i + 2].x(), self.lines[i + 2].y())
+            )
+
+            res = alg.CutSection(QRectF(*self.cutter[1:]), l)
+            print(res)
+
+            if res is not None:
+                self.results.append(res)
+        self.update()
+
     def paintEvent(self, event):
         self.painter.begin(self)
         self.painter.drawPixmap(self.rect(), self.pixmap())
@@ -137,6 +155,13 @@ class Canvas(QtWidgets.QLabel):
 
         self.drawCutterToCanv()
         self.drawLinesToCanv()
+        
+        resColor = self.parentPtr.getPBColor(self.parentPtr.resColor) 
+        self.pen.setColor(resColor)
+        self.painter.setPen(self.pen)
+
+        for line in self.results:
+            self.painter.drawLine(*line)
 
         self.painter.setPen(self.pen)
         self.painter.end()
