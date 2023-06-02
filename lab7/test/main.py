@@ -124,6 +124,8 @@ MASK_RIGHT =  0b0010
 MASK_BOTTOM = 0b0100
 MASK_TOP =    0b1000
 def set_bits(point, rect_sides):
+    print('rect_sides', rect_sides)
+    print('point', point)
     bits = 0b0000
     if point[0] < rect_sides[cfg.LEFT]:
         bits += MASK_LEFT
@@ -146,7 +148,7 @@ def find_vertical(p, index, rect):
 
 
 def cut_section(rect, p):
-    print(p, rect)
+    print(p, rect, sep='\n\n')
     s = list()
     for i in range(2):
         s.append(set_bits(p[i], rect))
@@ -156,8 +158,11 @@ def cut_section(rect, p):
         draw_section(p[0][0], p[0][1], p[1][0], p[1][1], res_color)
         return
 
+    print('s: ', *list(map(bin, s)))
+
     # Полностью невидимый отрезок
     if s[0] & s[1]:
+        print('invis')
         return
 
     # cur_index - содержит индекс текущей обрабатываемой вершины

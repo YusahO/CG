@@ -47,6 +47,27 @@ class Canvas(QtWidgets.QLabel):
             self.shiftPressed = False
             self.update()
 
+    def addLine(self, x0, y0, x1, y1):
+        p1 = QPoint(x0, y0)
+        p2 = QPoint(x1, y1)
+
+        self.lines.extend(
+            [self.parentPtr.getPBColor(self.parentPtr.lineColor), p1, p2]
+        )
+
+        self.update()
+    
+    def addCutter(self, x0, y0, x1, y1):
+        tl = QPoint(x0, y0)
+        br = QPoint(x1, y1)
+
+        self.cutter = [
+            self.parentPtr.getPBColor(self.parentPtr.sepColor),
+            tl, br
+        ]
+
+        self.update()
+
     def __drawCoords(self, painter: QPainter):
         margin = 10
         mark_len = 5
@@ -77,7 +98,7 @@ class Canvas(QtWidgets.QLabel):
 
     def getShiftFixedMpos(self):
         mpos = QPointF(self.curMousePos.x(), self.curMousePos.y())
-        if len(self.lines) == 0:
+        if len(self.lines) == 0 or len(self.lines) % 3 == 1:
             return mpos
 
         x_dist = abs(mpos.x() - self.lines[-1].x())
@@ -97,13 +118,30 @@ class Canvas(QtWidgets.QLabel):
         if event.button() == LMB and len(self.lines) // 3 < 10:
             if len(self.lines) % 3 == 0:
                 self.lines.append(self.parentPtr.getPBColor(self.parentPtr.lineColor))
-            self.lines.append(self.getValidMpos())
+            p = self.getValidMpos()
+            self.lines.append(QPoint(int(p.x()), int(p.y())))
+
+            if len(self.lines) % 3 == 0:
+                p = (self.lines[-2], self.lines[-1])
+                self.parentPtr.lineXSLE.setText(f'{p[0].x()}')
+                self.parentPtr.lineYSLE.setText(f'{p[0].y()}')
+                self.parentPtr.lineXELE.setText(f'{p[1].x()}')
+                self.parentPtr.lineYELE.setText(f'{p[1].y()}')
+
         elif event.button() == RMB:
             if len(self.cutter) + 1 > 3:
                 self.cutter.clear()
+                self.results = []
             if len(self.cutter) == 0:
                 self.cutter.append(self.parentPtr.getPBColor(self.parentPtr.sepColor))
             self.cutter.append(event.pos())
+
+            if len(self.cutter) == 3:
+                self.parentPtr.sepTLXLE.setText(f'{self.cutter[-2].x()}')
+                self.parentPtr.sepTLYLE.setText(f'{self.cutter[-2].y()}')
+                self.parentPtr.sepRBXLE.setText(f'{self.cutter[-1].x()}')
+                self.parentPtr.sepRBYLE.setText(f'{self.cutter[-1].y()}')
+
         self.update()
 
     def drawLinesToCanv(self):
@@ -131,18 +169,20 @@ class Canvas(QtWidgets.QLabel):
 
     def doCutting(self):
         self.results = []
+        self.update()
+
         for i in range(0, len(self.lines) - 2, 3):
             l = \
-            (
-                (self.lines[i + 1].x(), self.lines[i + 1].y()), 
-                (self.lines[i + 2].x(), self.lines[i + 2].y())
-            )
+            [
+                [self.lines[i + 1].x(), self.lines[i + 1].y()], 
+                [self.lines[i + 2].x(), self.lines[i + 2].y()]
+            ]
 
             res = alg.CutSection(QRectF(*self.cutter[1:]), l)
             print(res)
-
             if res is not None:
                 self.results.append(res)
+
         self.update()
 
     def paintEvent(self, event):

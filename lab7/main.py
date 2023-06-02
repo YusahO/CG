@@ -22,6 +22,9 @@ class UI(QtWidgets.QMainWindow):
         self.resColor.clicked.connect(lambda: self.setPBColor(self.resColor))
 
         self.canvClearPB.clicked.connect(self.clearCanvas)
+
+        self.sepDrawPB.clicked.connect(self.addCutter)
+        self.lineDrawPB.clicked.connect(self.addLine)
         self.doPB.clicked.connect(self.canvas.doCutting)
 
         self.author.triggered.connect(
@@ -32,7 +35,7 @@ class UI(QtWidgets.QMainWindow):
 
         self.prog.triggered.connect(
             lambda: self.msgbox.information(
-                self, 'О программе', '<font size=14><b>Реализовать и исследовать алгоритм построчного затравочного заполнения.</b></font>'
+                self, 'О программе', '<font size=14><b>Реализация простого алгоритма отсечения отрезка регулярным отсекателем.</b></font>'
             )
         )
 
@@ -40,10 +43,42 @@ class UI(QtWidgets.QMainWindow):
 
     def clearCanvas(self):
         self.canvas.lines.clear()
-        self.canvas.cutter.clear()
+        self.canvas.cutter = []
         self.canvas.results.clear()
 
         self.canvas.update()
+
+    def addCutter(self):
+        x0 = self.tryGetLineEditData(self.sepTLXLE, int, 0)
+        if x0 is None:
+            return
+        y0 = self.tryGetLineEditData(self.sepTLYLE, int, 0)
+        if y0 is None:
+            return
+        x1 = self.tryGetLineEditData(self.sepRBXLE, int, 0)
+        if x1 is None:
+            return
+        y1 = self.tryGetLineEditData(self.sepRBYLE, int, 0)
+        if y1 is None:
+            return
+
+        self.canvas.addCutter(x0, y0, x1, y1)
+
+    def addLine(self):
+        x0 = self.tryGetLineEditData(self.lineXSLE, int, 0)
+        if x0 is None:
+            return
+        y0 = self.tryGetLineEditData(self.lineYSLE, int, 0)
+        if y0 is None:
+            return
+        x1 = self.tryGetLineEditData(self.lineXELE, int, 0)
+        if x1 is None:
+            return
+        y1 = self.tryGetLineEditData(self.lineYELE, int, 0)
+        if y1 is None:
+            return
+
+        self.canvas.addLine(x0, y0, x1, y1)
 
     def setPBColor(self, pb):
         newcol = QtWidgets.QColorDialog().getColor()

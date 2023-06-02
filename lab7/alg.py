@@ -3,26 +3,32 @@ from PyQt5.QtCore import QPoint, QRect
 
 from copy import deepcopy
 
-LEFT = 0
-RIGHT = 1
-TOP = 2
+LEFT =   0
+RIGHT =  1
+TOP =    2
 BOTTOM = 3
 
-MASK_LEFT = 0b0001
-MASK_RIGHT = 0b0010
+MASK_LEFT =   0b0001
+MASK_RIGHT =  0b0010
 MASK_BOTTOM = 0b0100
-MASK_TOP = 0b1000
+MASK_TOP =    0b1000
 
 
 def PointToArr(p: QPoint):
     return [p.x(), p.y()]
 
 def RectToArr(rect: QRect):
-    return [ int(rect.left()), int(rect.top()), int(rect.right()), int(rect.bottom()) ]
+    x0, x1, y1, y0 = int(rect.left()), int(rect.right()), int(rect.bottom()), int(rect.top())
+    if x0 > x1:
+        x0, x1 = x1, x0
+        y0, y1 = y1, y0
+    return [ x0, x1, y1, y0 ]
 
 
 def SetBits(point, rect_sides):
     bits = 0b0000
+    print('rect_sides', rect_sides)
+    print('point', point)
     if point[0] < rect_sides[LEFT]:
         bits += MASK_LEFT
     if point[0] > rect_sides[RIGHT]:
@@ -43,25 +49,22 @@ def FindVertical(p, ind, rect):
         return p[ind]
 
 
-def CutSection(_rect, _p):
-    
+def CutSection(_rect: QRect, _p):
     rect = RectToArr(_rect)
     p = deepcopy(_p)
-
-    print(p, rect)
 
     s = list()
     for i in range(2):
         s.append(SetBits(p[i], rect))
 
+    print('s: ', *list(map(bin, s)))
+
     # полностью видимый отрезок
     if s[0] == 0 and s[1] == 0:
-        # painter.drawLine(p[0][0], p[0][1], p[1][0], p[1][1])
-        return (p[0][0], p[0][1], p[1][0], p[1][1])
+        return [p[0][0], p[0][1], p[1][0], p[1][1]]
 
     # полностью невидимый отрезок
     if s[0] & s[1]:
-        print('invis')
         return
 
     icur = 0  # индекс текущей обрабатываемой вершины
@@ -89,15 +92,15 @@ def CutSection(_rect, _p):
 
         m = (p[1][1] - p[0][1]) / (p[1][0] - p[0][0])
 
-        # Нахождение пересечения с левой границей
+        # если есть пересечение с левой границей, ищем его
         if s[icur] & MASK_LEFT:
-            y = round(m * rect[LEFT] - p[icur][0] + p[icur][1])
+            y = round(m * (rect[LEFT] - p[icur][0]) + p[icur][1])
             if y <= rect[TOP] and y >= rect[BOTTOM]:
                 res.append([rect[LEFT], y])
                 icur += 1
                 continue
 
-        # Нахождение пересечения с правой границей
+        # если есть пересечение с правой границей, ищем его
         elif s[icur] & MASK_RIGHT:
             y = round(m * (rect[RIGHT] - p[icur][0]) + p[icur][1])
             if y <= rect[TOP] and y >= rect[BOTTOM]:
@@ -132,6 +135,5 @@ def CutSection(_rect, _p):
         icur += 1
 
     if res:
-        # painter.drawLine(res[0][0], res[0][1], res[1][0], res[1][1])
-        return (res[0][0], res[0][1], res[1][0], res[1][1])
+        return [res[0][0], res[0][1], res[1][0], res[1][1]]
 
