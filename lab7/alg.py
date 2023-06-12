@@ -19,9 +19,9 @@ def PointToArr(p: QPoint):
 
 def RectToArr(rect: QRect):
     x0, x1, y1, y0 = int(rect.left()), int(rect.right()), int(rect.bottom()), int(rect.top())
-    if x0 > x1:
-        x0, x1 = x1, x0
-        y0, y1 = y1, y0
+    # if x0 > x1:
+    #     x0, x1 = x1, x0
+    #     y0, y1 = y1, y0
     return [ x0, x1, y1, y0 ]
 
 

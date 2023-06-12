@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1134</width>
-    <height>798</height>
+    <width>1082</width>
+    <height>837</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>ЛР7 Шубенина</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0">
@@ -20,14 +20,14 @@
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1">
         <item>
          <widget class="Canvas" name="canvas" native="true"/>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0">
         <property name="spacing">
          <number>0</number>
@@ -46,6 +46,7 @@
           <property name="font">
            <font>
             <pointsize>14</pointsize>
+            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -59,6 +60,7 @@
           <property name="font">
            <font>
             <pointsize>14</pointsize>
+            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -71,6 +73,7 @@
              <property name="font">
               <font>
                <pointsize>10</pointsize>
+               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -87,6 +90,7 @@
              <property name="font">
               <font>
                <pointsize>10</pointsize>
+               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -103,6 +107,7 @@
              <property name="font">
               <font>
                <pointsize>10</pointsize>
+               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -163,6 +168,7 @@
           <property name="font">
            <font>
             <pointsize>14</pointsize>
+            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -255,6 +261,7 @@
           <property name="font">
            <font>
             <pointsize>14</pointsize>
+            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -341,6 +348,7 @@
           <property name="font">
            <font>
             <pointsize>14</pointsize>
+            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -390,13 +398,14 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1134</width>
-     <height>29</height>
+     <width>1082</width>
+     <height>36</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <pointsize>13</pointsize>
+     <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
@@ -404,6 +413,7 @@
     <property name="font">
      <font>
       <pointsize>13</pointsize>
+      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
