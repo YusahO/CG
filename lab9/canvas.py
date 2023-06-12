@@ -2,7 +2,7 @@ from PyQt5 import QtGui, QtWidgets, QtCore
 from PyQt5.QtCore import Qt, QPoint, QPointF, QRectF
 from PyQt5.QtGui import QPainter, QColor, QPen, QStaticText, QPixmap
 import alg
-import math
+from copy import deepcopy
 
 LMB = 1
 RMB = 2
@@ -80,11 +80,45 @@ class Canvas(QtWidgets.QLabel):
         self.setFocus(True)
         self.update()
 
+    def clamp(self, value, min_, max_):
+        return max(min_, min(max_, value))
+    
+    def restrict(self, value, a, b):
+        return self.clamp(value, min(a, b), max(a, b))
+
+    def getMousePosOnEdge(self):
+        # if not self.active:
+        #     return point
+        
+        point = deepcopy(self.curMousePos)
+        p1 = self.temp_line[0]
+        p2 = self.temp_line[1]
+
+        dy = p1.y() - p2.y()
+        dx = p1.x() - p2.x()
+
+        if dy == 0:
+            point.setY(p1.y())
+            point.setX(self.restrict(point.x(), p1.x(), p2.x()))
+            return point
+        
+        if dx == 0:
+            point.setX(self.p1.x())
+            point.setY(self.restrict(point.y(), p1.y(), p2.y()))
+            return point
+        
+        k = dy / dx
+        m = p1.y() - p1.x() * k
+
+        point.setX(self.restrict(point.x(), p1.x(), p2.x()))
+        point.setY(round(point.x() * k + m))
+        return point
+
     def getShiftFixedMpos(self):
         mpos = QPointF(self.curMousePos.x(), self.curMousePos.y())
-        if len(self.lines) != 0 and len(self.lines) % 3 == 2:
-            target_x = self.lines[-1].x()
-            target_y = self.lines[-1].y()
+        if len(self.poly) != 0 and not self.poly_closed:
+            target_x = self.poly[-1].x()
+            target_y = self.poly[-1].y()
         else:
             if len(self.cutter) <= 1:
                 return self.curMousePos
@@ -99,27 +133,13 @@ class Canvas(QtWidgets.QLabel):
             mpos.setY(target_y)
         return mpos
     
-    def getParallelMpos(self):
-        if len(self.lines) % 3 == 1:
-            return self.curMousePos
-
-        if self.temp_line[1].x() == self.temp_line[0].x():
-            return QPoint(self.lines[-1].x(), self.curMousePos.y())
-        elif self.temp_line[1].y() == self.temp_line[0].y():
-            return QPoint(self.curMousePos.x(), self.lines[-1].y())
-        
-        m = (self.temp_line[1].y() - self.temp_line[0].y()) / (self.temp_line[1].x() - self.temp_line[0].x())
-        b = self.lines[-1].y() - m * self.lines[-1].x()
-
-        mpos = QPoint(self.curMousePos.x(), int(self.curMousePos.x() * m + b))
-        return mpos
 
     def getValidMpos(self):
         pos = self.curMousePos
         if self.shiftPressed:
             pos = self.getShiftFixedMpos()
         elif len(self.temp_line) == 2:
-            pos = self.getParallelMpos()
+            pos = self.getMousePosOnEdge()
         return pos
 
     def addPointToCutter(self, point):
@@ -127,10 +147,6 @@ class Canvas(QtWidgets.QLabel):
             self.cutter.clear()
             self.results = []
             self.cutter_closed = False
-
-        if len(self.cutter) == 0:
-            self.cutter.append(
-                self.parentPtr.getPBColor(self.parentPtr.sepColor))
 
         self.parentPtr.table.rebuildTable(point)
         self.cutter.append(point)
@@ -141,21 +157,17 @@ class Canvas(QtWidgets.QLabel):
             self.results = []
             self.poly_closed = False
 
-        if len(self.poly) == 0:
-            self.poly.append(
-                self.parentPtr.getPBColor(self.parentPtr.polyColor))
-
         self.poly.append(point)
 
     def mousePressEvent(self, event):
-        self.temp_line = []
-        self.parentPtr.table.clearSelection()
 
         if event.button() == LMB:
             p = self.getValidMpos()
             self.addPointToPoly(QPoint(int(p.x()), int(p.y())))
 
         elif event.button() == RMB:
+            self.temp_line = []
+            self.parentPtr.table.clearSelection()
             p = self.getValidMpos()
             self.addPointToCutter(QPoint(int(p.x()), int(p.y())))
 
@@ -163,25 +175,25 @@ class Canvas(QtWidgets.QLabel):
 
     def drawPolyToCanv(self):
         if len(self.poly) > 0:
-            self.setColor(self.poly[0])
+            self.setColor(self.parentPtr.getPBColor(self.parentPtr.polyColor))
 
-            for i in range(1, len(self.poly) - 1):
+            for i in range(len(self.poly) - 1):
                 self.painter.drawLine(self.poly[i], self.poly[i + 1])
 
             if self.poly_closed:
-                self.painter.drawLine(self.poly[-1], self.poly[1])
+                self.painter.drawLine(self.poly[-1], self.poly[0])
             else:
                 self.painter.drawLine(self.poly[-1], self.getValidMpos())
 
     def drawCutterToCanv(self):
         if len(self.cutter) > 0:
-            self.setColor(self.cutter[0])
+            self.setColor(self.parentPtr.getPBColor(self.parentPtr.sepColor))
 
-            for i in range(1, len(self.cutter) - 1):
+            for i in range(len(self.cutter) - 1):
                 self.painter.drawLine(self.cutter[i], self.cutter[i + 1])
 
             if self.cutter_closed:
-                self.painter.drawLine(self.cutter[-1], self.cutter[1])
+                self.painter.drawLine(self.cutter[-1], self.cutter[0])
             else:
                 self.painter.drawLine(self.cutter[-1], self.getValidMpos())
 
@@ -191,26 +203,20 @@ class Canvas(QtWidgets.QLabel):
                 self.parentPtr, 'Ошибка!', '<font size=14><b>Пожалуйста, введите отсекатель</b></font>')
             return
 
-        if len(self.lines) == 0 or len(self.lines) % 3 != 0:
+        if len(self.poly) == 0 or not self.poly_closed:
             self.parentPtr.msgbox.critical(
                 self.parentPtr, 'Ошибка!', '<font size=14><b>Пожалуйста, введите хотя бы один отсекаемый отрезок</b></font>')
             return
 
-        # print('cutter: ', self.cutter)
-        vertices = []
-        for point in self.cutter[1:]:
-            vertices.append([point.x(), point.y()])
-        # print('verts: ', vertices)
-        # print()
-        sections = []
-        for i in range(0, len(self.lines) - 2, 3):
-            section = self.lines[i: i + 3]
-            sections.append([
-                [section[1].x(), section[1].y()],
-                [section[2].x(), section[2].y()]
-            ])
+        cutter_vertices = []
+        for point in self.cutter:
+            cutter_vertices.append([point.x(), point.y()])
+        
+        figure = []
+        for point in self.poly:
+            figure.append([point.x(), point.y()])
 
-        if not alg.CheckPoly(vertices):
+        if not alg.CheckPoly(cutter_vertices):
             self.parentPtr.msgbox.critical(
                 self.parentPtr, 'Ошибка!', '<font size=14><b>Отсекатель должен быть выпуклым многоугольником</b></font>')
             return
@@ -218,38 +224,37 @@ class Canvas(QtWidgets.QLabel):
         self.results = []
         self.update()
 
-        normals = alg.GetNormals(vertices)
-        for section in sections:
-            res = alg.CutSection(section, vertices, normals)
-            if res is not None:
-                self.results.append(res)
+        normals = alg.GetNormals(cutter_vertices)
+        res = alg.CutFigure(figure, cutter_vertices, normals)
+
+        if res is not None:
+            self.results = list(map(lambda li: [int(li[0]+0.5), int(li[1]+0.5)], res))
 
         self.update()
 
     def paintEvent(self, event):
         self.painter.begin(self)
+        self.pixmap().fill(QColor(0xFFFFFF))
         self.painter.drawPixmap(self.rect(), self.pixmap())
-
-        self.painter.fillRect(0, 0, self.width(), self.height(), 0xFFFFFF)
 
         self.__drawCoords(self.painter)
 
         self.drawCutterToCanv()
-        self.drawLinesToCanv()
-
-        resColor = self.parentPtr.getPBColor(self.parentPtr.resColor)
-        self.pen.setColor(resColor)
-        self.painter.setPen(self.pen)
-
-        for line in self.results:
-            self.painter.drawLine(*line)
 
         if len(self.temp_line) == 2:
-            col = self.cutter[0]
+            col = self.parentPtr.getPBColor(self.parentPtr.sepColor)
             col = QColor(255 - col.red(), 255 - col.green(), 255 - col.blue())
-            self.pen.setColor(col)
-            self.painter.setPen(self.pen)
+            self.setColor(col)
             self.painter.drawLine(*self.temp_line)
 
-        self.painter.setPen(self.pen)
+        self.drawPolyToCanv()
+
+        resColor = self.parentPtr.getPBColor(self.parentPtr.resColor)
+        self.setColor(resColor)
+
+        for i in range(len(self.results) - 1):
+            self.painter.drawLine(self.results[i][0], self.results[i][1], self.results[i + 1][0], self.results[i + 1][1])
+        if len(self.results) > 0:
+            self.painter.drawLine(self.results[-1][0], self.results[-1][1], self.results[0][0], self.results[0][1])
+
         self.painter.end()

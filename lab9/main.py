@@ -18,6 +18,7 @@ class UI(QtWidgets.QMainWindow):
         self.resColor.clicked.connect(lambda: self.setPBColor(self.resColor))
         
         self.closeSepPB.clicked.connect(self.closeCutter)
+        self.closeNgonPB.clicked.connect(self.closePoly)
 
         self.table.cellClicked.connect(self.highlightParallel)
 
@@ -26,6 +27,7 @@ class UI(QtWidgets.QMainWindow):
         self.sepDrawPB.clicked.connect(self.addCutterPoint)
         self.ngonDrawPB.clicked.connect(self.addPolyPoint)
 
+        self.deselectPB.clicked.connect(self.deselect)
         self.doPB.clicked.connect(self.canvas.doCutting)
 
         self.author.triggered.connect(
@@ -39,8 +41,14 @@ class UI(QtWidgets.QMainWindow):
                 self, 'О программе', '<font size=14><b>Реализация алгоритма отсечения многоугольников Сазерленда Ходжмена</b></font>'
             )
         )
-
         self.show()
+
+    def deselect(self):
+        self.canvas.temp_line = []
+        selected_rows = self.table.selectionModel().selectedRows()
+        for row in selected_rows:
+            self.table.item(row.row(), 0).setSelected(False)
+        self.canvas.update()
 
     def highlightParallel(self, r, c):
         if r == -1:
@@ -49,20 +57,32 @@ class UI(QtWidgets.QMainWindow):
             )
             return
         
-        data = self.table.item(r, 0)
+        data = self.table.item(r, c)
         x1, y1, x2, y2 = [int(f) for f in re.findall('[0-9]*', data.text()) if f != '']
         self.canvas.temp_line = [QPoint(x1, y1), QPoint(x2, y2)]
         self.canvas.update()
 
     def closeCutter(self):
+        if len(self.canvas.cutter) == 0:
+            return
+        
         self.canvas.cutter_closed = True
         self.table.closed = True
         self.table.rebuildTable()
+        self.canvas.update()
+    
+    def closePoly(self):
+        if len(self.canvas.poly) == 0:
+            return
+        
+        self.canvas.poly_closed = True
         self.canvas.update()
 
     def clearCanvas(self):
         self.table.clearContents()
         self.table.setRowCount(0)
+
+        self.canvas.temp_line = []
 
         self.canvas.poly = []
         self.canvas.poly_closed = False
@@ -146,4 +166,3 @@ class UI(QtWidgets.QMainWindow):
 app = QtWidgets.QApplication(sys.argv)
 window = UI()
 app.exec_()
-print('hello')
